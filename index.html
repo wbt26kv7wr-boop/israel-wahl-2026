@@ -349,7 +349,7 @@ dash.calc('mob',{inputs:['muni','turnout','national'],title:'Tempo-Index je Ort'
  fn:(muni,turnout,national)=>{
   const nat={};national.forEach(n=>{if(n.y2026!==null&&n.y2026!==undefined)nat[Number(n.hour)]=Number(n.y2026);});
   const fin=Number(national.find(n=>Number(n.hour)===22).y2022);
-  const hrs=Object.keys(nat).map(Number).filter(h=>h<22).sort((a,b)=>a-b);const H=hrs[hrs.length-1],P=hrs.length>1&&hrs[hrs.length-2]>=12?hrs[hrs.length-2]:null;
+  const hT=new Set(turnout.map(t=>Number(t.hour)));const hrs=Object.keys(nat).map(Number).filter(h=>h<22&&hT.has(h)).sort((a,b)=>a-b);const H=hrs[hrs.length-1],P=hrs.length>1&&hrs[hrs.length-2]>=12?hrs[hrs.length-2]:null;
   const T={};turnout.forEach(t=>{(T[t.code]=T[t.code]||{})[Number(t.hour)]=Number(t.turnout);});
   return muni.map(m=>{const t=T[m.code]||{};const b=m.turnout22==null?null:Number(m.turnout22);
    const ix=h=>h==null||t[h]==null||!b?null:Math.round(((t[h]/b)/(nat[h]/fin))*100)/100;

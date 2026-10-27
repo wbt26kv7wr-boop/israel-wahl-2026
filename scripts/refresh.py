@@ -67,6 +67,11 @@ PREV = HOUR - 2
 hist_p = os.path.join(OUT, "history.json")
 hist = json.load(open(hist_p)) if os.path.exists(hist_p) else {"national": {}, "muni": {}}
 hist["national"][str(HOUR)] = nat_now
+# Landeswerte, die die CEC schon gemeldet hat, bevor die Kartendatei aktualisiert wurde (Quelle: Medien)
+_mp = os.path.join(OUT, "manual_national.json")
+if os.path.exists(_mp):
+    for _h, _v in json.load(open(_mp)).items():
+        if _h not in hist["national"] or int(_h) > HOUR: hist["national"][_h] = _v
 if nat_prev is not None and str(PREV) not in hist["national"]:
     hist["national"][str(PREV)] = float(nat_prev)
 for code, f in live["features"].items():
@@ -124,7 +129,8 @@ def nat_estimate(hour, now_pct):
     tq = {4:1.533,5:1.476,6:1.44,7:1.415,8:1.397,9:1.383,10:1.372,11:1.363,12:1.356}.get(d - 2, 1.35)
     y = b + g * now_pct; w = tq * se * (1 + 1 / d + (now_pct - mx) ** 2 / sxx) ** 0.5
     return dict(est=round(max(now_pct, y), 1), lo=round(max(now_pct, y - w), 1), hi=round(min(100, y + w), 1), n=d)
-NEST = nat_estimate(HOUR, nat_now)
+_NH = max(int(h) for h, v in hist["national"].items() if v is not None and int(h) < 22)
+NEST = nat_estimate(_NH, float(hist["national"][str(_NH)]))
 national = [dict(hour=h, y2026=hist["national"].get(str(h)), y2022=v,
                  est=(NEST["est"] if h == 22 and NEST else None), lo=(NEST["lo"] if h == 22 and NEST else None),
                  hi=(NEST["hi"] if h == 22 and NEST else None)) for h, v in nat22_hours.items()]
