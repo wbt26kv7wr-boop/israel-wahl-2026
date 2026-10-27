@@ -102,7 +102,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
       </div>
     </div>
     <p id="takeaway" class="dash-skeleton">—</p>
-    <span class="il-stamp"><span data-t="asof">Stand</span> <span data-source="latest" data-field="hour" id="stamp">—</span> <span data-t="hourIL">Uhr (Israel) · Update alle 2 Std.</span></span>
+    <span class="il-stamp"><span data-t="asof">Landeswert</span> <span data-source="latest" data-field="hour" id="stamp">—</span> · <span data-t="locAsof">Ortsdaten bis</span> <span data-source="fresh" data-field="loc_time" id="locTime">—</span> <span data-t="hourIL">(Uhr Israel) · laufend aktualisiert</span> <button class="ib" data-tt="stampTip">i</button></span>
   </div>
 
   <div class="il-tiles" id="tiles">
@@ -218,7 +218,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 
 <script>
 window.IL_T={
-de:{title:'Israel-Wahl 2026 · Mobilisierung',asof:'Stand',hourIL:'Uhr (Israel) · Update alle 2 Std.',natTurnout:'Beteiligung landesweit',
+de:{title:'Israel-Wahl 2026 · Mobilisierung',asof:'Landeswert',locAsof:'Ortsdaten bis',hourIL:'(Uhr Israel) · laufend aktualisiert',stampTip:'Landeswert: letzte offizielle Erhebung der Wahlkommission (alle 2 Std.). Ortsdaten: Wahllokale melden laufend nach; angezeigt ist die jüngste Meldung, die in Karten, Tabelle und Indizes steckt.',upd:'Gemeldet',natTurnout:'Beteiligung landesweit',
  natTurnoutTip:'Wahlkommission (CEC), Anteil der Wahlberechtigten zur genannten Stunde. Vergleich: gleiche Stunde 2022.',
  c_rechts:'Rechts / Likud',c_haredi:'Haredi','c_mitte-links':'Mitte-links',c_raam:"Ra'am",c_joint:'Joint List',c_swing:'Swing','c_n.v.':'k. A.',places:'Orte',
  tip_rechts:'Orte, in denen der Netanjahu-Block 2022 mind. 10 Punkte vorn lag (ohne Haredi-Orte). Index gewichtet nach Wahlberechtigten; 1,00 = wie das Land.',
@@ -251,7 +251,7 @@ de:{title:'Israel-Wahl 2026 · Mobilisierung',asof:'Stand',hourIL:'Uhr (Israel) 
  inset:'Großraum Tel Aviv',hour:h=>`${h} Uhr`,h:'h',dec:',',
  coal:{'NB':'Netanjahu-Block','NB+R':'Netanjahu-Block + Reservisten','WB':'Wechsel-Block','WB+R':'Wechsel + Reservisten','WB+R+RA':"Wechsel + Res. + Ra'am",'WB+R+RA+J':"Wechsel + Res. + Ra'am + Joint",'U':'Einheit: Likud + Yashar + Beyachad'},
  sectors:{right:'Rechte Hochburgen',left:'Mitte-links-Hochburgen',secular:'Säkular',national_religious:'National-religiös',judea_samaria:'Judäa & Samaria',haredi:'Haredi',arab:'Arabisch',druze:'Drusisch',fsu:'Ex-UdSSR-Einwanderer',ethiopian:'Äthiopische Einwanderer',north:'Nordgrenze',gaza:'Gaza-Umland',bedouin_north:'Beduinen Nord',bedouin_south:'Beduinen Negev',christian:'Christlich'}},
-en:{title:'Israel election 2026 · Mobilisation',asof:'As of',hourIL:'(Israel time) · updated every 2 hrs',natTurnout:'National turnout',
+en:{title:'Israel election 2026 · Mobilisation',asof:'National figure',locAsof:'locality data to',hourIL:'(Israel time) · continuously updated',stampTip:'National figure: latest official CEC count (every 2 hrs). Locality data: polling stations report continuously; shown is the latest report included in maps, table and indices.',upd:'Reported',natTurnout:'National turnout',
  natTurnoutTip:'Central Elections Committee (CEC): share of eligible voters by the given hour, vs. the same hour in 2022.',
  c_rechts:'Right / Likud',c_haredi:'Haredi','c_mitte-links':'Centre-left',c_raam:"Ra'am",c_joint:'Joint List',c_swing:'Swing','c_n.v.':'n/a',places:'places',
  tip_rechts:'Localities where the Netanyahu bloc led by at least 10 points in 2022 (excl. Haredi towns). Weighted by eligible voters; 1.00 = national pace.',
@@ -284,7 +284,7 @@ en:{title:'Israel election 2026 · Mobilisation',asof:'As of',hourIL:'(Israel ti
  inset:'Greater Tel Aviv',hour:h=>`${h}:00`,h:'h',dec:'.',
  coal:{'NB':'Netanyahu bloc','NB+R':'Netanyahu bloc + Reservists','WB':'Change bloc','WB+R':'Change + Reservists','WB+R+RA':"Change + Res. + Ra'am",'WB+R+RA+J':"Change + Res. + Ra'am + Joint",'U':'Unity: Likud + Yashar + Beyachad'},
  sectors:{right:'Right strongholds',left:'Centre-left strongholds',secular:'Secular',national_religious:'National religious',judea_samaria:'Judea & Samaria',haredi:'Haredi',arab:'Arab',druze:'Druze',fsu:'Former USSR immigrants',ethiopian:'Ethiopian immigrants',north:'Northern border',gaza:'Gaza envelope',bedouin_north:'Bedouin (north)',bedouin_south:'Bedouin (Negev)',christian:'Christian'}},
-he:{title:'בחירות 2026 · מוביליזציה',asof:'נכון ל־',hourIL:'(שעון ישראל) · עדכון כל שעתיים',natTurnout:'אחוז הצבעה ארצי',
+he:{title:'בחירות 2026 · מוביליזציה',asof:'נתון ארצי',locAsof:'נתוני יישובים עד',hourIL:'(שעון ישראל) · מתעדכן שוטף',stampTip:'נתון ארצי: הספירה הרשמית האחרונה של ועדת הבחירות (כל שעתיים). נתוני יישובים: הקלפיות מדווחות באופן שוטף; מוצג הדיווח האחרון שנכלל במפות, בטבלה ובמדדים.',upd:'דווח',natTurnout:'אחוז הצבעה ארצי',
  natTurnoutTip:'ועדת הבחירות המרכזית: שיעור בעלי זכות הבחירה שהצביעו עד השעה, לעומת אותה שעה ב־2022.',
  c_rechts:'ימין / ליכוד',c_haredi:'חרדים','c_mitte-links':'מרכז־שמאל',c_raam:'רע"ם',c_joint:'הרשימה המשותפת',c_swing:'מתנדנדים','c_n.v.':'אין נתון',places:'יישובים',
  tip_rechts:'יישובים שבהם גוש נתניהו הוביל ב־10 נקודות לפחות ב־2022 (ללא ערים חרדיות). משוקלל לפי בעלי זכות בחירה; 1.00 = הקצב הארצי.',
@@ -338,6 +338,9 @@ Object.assign(window.IL_T.he,{campT:'מחנות לפי מעוזים',campTip:'מ
 
 <script>
 (function(){
+dash.calc('fresh',{inputs:['muni'],title:'Aktualität der Ortsdaten',description:'Jüngste Meldezeit (Uhr Israel) unter allen Orten.',
+ fn:(muni)=>{const t=muni.map(m=>m.updated).filter(Boolean).sort();return [{loc_time:t.length?t[t.length-1]:null,n:t.length}];}});
+
 dash.calc('latest',{inputs:['national'],title:'Letzter Stand landesweit',description:'Letzte Stunde mit Wert 2026, derselbe Zeitpunkt 2022 und die Differenz.',
  fn:(national)=>{const r=national.filter(x=>x.y2026!==null&&x.y2026!==undefined).map(x=>({hour:Number(x.hour),y2026:Number(x.y2026),y2022:x.y2022==null?null:Number(x.y2022)})).sort((a,b)=>a.hour-b.hour);
   const l=r[r.length-1];return [{hour:l.hour,y2026:l.y2026,y2022:l.y2022,delta:l.y2022==null?null:Math.round((l.y2026-l.y2022)*10)/10}];}});
@@ -350,7 +353,7 @@ dash.calc('mob',{inputs:['muni','turnout','national'],title:'Tempo-Index je Ort'
   const T={};turnout.forEach(t=>{(T[t.code]=T[t.code]||{})[Number(t.hour)]=Number(t.turnout);});
   return muni.map(m=>{const t=T[m.code]||{};const b=m.turnout22==null?null:Number(m.turnout22);
    const ix=h=>h==null||t[h]==null||!b?null:Math.round(((t[h]/b)/(nat[h]/fin))*100)/100;
-   return {code:m.code,name:m.name,name_he:m.name_he,camp:m.camp,camp_label:m.camp,eligible:m.eligible,t10:t[10]==null?null:t[10],t_now:t[H]==null?null:t[H],hour:H,
+   return {code:m.code,updated:m.updated||null,name:m.name,name_he:m.name_he,camp:m.camp,camp_label:m.camp,eligible:m.eligible,t10:t[10]==null?null:t[10],t_now:t[H]==null?null:t[H],hour:H,
     turnout22:b,nbloc22:m.nbloc22,cbloc22:m.cbloc22,arab22:m.arab22,idx:ix(H),idx_prev:ix(P)};});}});
 
 dash.calc('camps',{inputs:['mob'],title:'Tempo-Index je Lager',description:'Index je Lager, gewichtet: Σ(Berecht.×Index×Beteiligung 2022) ÷ Σ(Berecht.×Beteiligung 2022).',
@@ -442,7 +445,7 @@ function tipAt(tip,card,ev,lines){const t=tip.node();t.replaceChildren();t.setAt
 function drawAll(){
  const L=dash.data('latest'),M=dash.data('mob'),C=dash.data('camps'),MU=dash.data('muni'),N=dash.data('national');
  const tk=document.getElementById('takeaway');
- if(L.status==='ok'&&L.data.length){const l=L.data[0];document.getElementById('stamp').textContent=l.hour+':00';document.getElementById('natNow').textContent=pc(l.y2026);
+ if(L.status==='ok'&&L.data.length){const l=L.data[0];document.getElementById('stamp').textContent=l.hour+':00';const F=dash.data('fresh');if(F.status==='ok'&&F.data.length&&F.data[0].loc_time)document.getElementById('locTime').textContent=F.data[0].loc_time;document.getElementById('natNow').textContent=pc(l.y2026);
   document.getElementById('natThen').textContent=pc(l.y2022);const d=document.getElementById('natDelta');d.textContent=(l.delta>0?'+':'')+pp(l.delta)+' '+T('pts');d.className=l.delta>=0?'il-up':'il-down';}
  if(C.status==='ok'){
   document.querySelectorAll('[data-source=camps][data-where]').forEach(el=>{const k=el.getAttribute('data-where').split('=')[1];const r=C.data.find(c=>c.camp===k);const fld=el.getAttribute('data-field');
@@ -454,7 +457,7 @@ function drawAll(){
  if(N.status==='ok'){const e=N.data.find(r=>Number(r.hour)===22);if(e&&e.est!=null){document.getElementById('natEst').textContent=pc(e.est);document.getElementById('natLo').textContent=pp(e.lo);document.getElementById('natHi').textContent=pc(e.hi);}}
  if(M.status==='ok'){const by=new Map(M.data.map(m=>[m.code,m]));const col=d3.scaleLinear([0.8,1,1.2],['#d64545','#f2f2f2','#1e9e5a']).clamp(true);
   drawMap('map1',c=>{const m=by.get(c);return m&&m.idx!=null?col(m.idx):null;},c=>{const m=by.get(c);if(!m)return null;
-   return [nm(m),`${T('now')} (${m.hour}:00): ${pc(m.t_now)}`,`${T('end22')}: ${pc(m.turnout22)}`,`${T('idx')}: ${ix(m.idx)}`,`${T('camp')}: ${CN(m.camp)}`];});}
+   return [nm(m),`${T('now')} (${m.hour}:00): ${pc(m.t_now)}`,`${T('end22')}: ${pc(m.turnout22)}`,`${T('idx')}: ${ix(m.idx)}`,`${T('camp')}: ${CN(m.camp)}`,`${T('upd')}: ${m.updated||'—'}`];});}
  if(MU.status==='ok'){const by=new Map(MU.data.map(m=>[m.code,m]));
   drawMap('map2',c=>{const m=by.get(c);if(!m||!CAMPC[m.camp])return null;const mg=m.camp==='raam'||m.camp==='joint'?m.arab22-50:m.camp==='haredi'?40:Math.abs(m.nbloc22-m.cbloc22);
    return d3.interpolateRgb('#ffffff',CAMPC[m.camp])(Math.min(1,.35+mg/60));},

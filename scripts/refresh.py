@@ -94,7 +94,7 @@ for code, f in live["features"].items():
     c = int(code)
     s = R22.get(c)
     row = dict(code=c, name=DE.get(c) or f.get("שם ישוב") or (s or {}).get("name22") or str(c), name_he=f.get("שם ישוב"),
-               eligible=int(f.get("בזב") or 0), kalpis=f.get("kalpis"))
+               eligible=int(f.get("בזב") or 0), kalpis=f.get("kalpis"), updated=f.get("updated"))
     if s:
         camp, nb, cb, ar = camp_of(s)
         row.update(camp=camp, turnout22=s["turnout22"], nbloc22=round(nb, 1), cbloc22=round(cb, 1), arab22=round(ar, 1),
