@@ -34,7 +34,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
   onData:fn=>{subs.push(fn);try{fn();}catch(e){console.error(e);}},loader:()=>{},colors:[],refresh:()=>load(),params:()=>({}),setParams:()=>{},resetParams:()=>{},setLink:()=>{}};
  function load(){const v=Date.now();Promise.all(IDS.map(id=>fetch('data/'+id+'.json?v='+v).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
   .then(d=>{store[id]={status:'ok',data:d};}).catch(()=>{store[id]={status:'error',data:[]};}))).then(emit);
-  fetch('data/status.json?v='+v).then(r=>r.json()).then(s=>{const el=document.getElementById('updAt');if(el&&s.generated)el.textContent=new Date(s.generated).toLocaleString();}).catch(()=>{});}
+  fetch('data/status.json?v='+v).then(r=>r.json()).then(s=>{const el=document.getElementById('updAt');if(el&&s.generated){const d=new Date(s.generated),f=z=>d.toLocaleString('de-DE',{timeZone:z,day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});el.textContent=f('Europe/Berlin')+' MEZ / '+f('Asia/Jerusalem')+' Israel';}}).catch(()=>{});}
  let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>subs.forEach(f=>f()),150);});
  window.addEventListener('DOMContentLoaded',()=>{load();setInterval(load,5*60*1000);});
 })();
@@ -175,7 +175,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     <div class="il-tw">
       <table id="tbl" data-source="mob" data-row-key="code">
         <thead><tr>
-          <th data-field="name" data-t="h_name">Ort</th><th data-field="camp_label" data-t="h_camp">Lager</th><th data-field="eligible" data-t="h_elig">Berecht.</th><th data-field="t10">10 h</th><th data-field="t_now" data-t="h_now">Aktuell</th><th data-field="turnout22" data-t="h_22">Ende 2022</th><th data-field="nbloc22" data-t="h_nb">N-Block 22</th><th data-field="cbloc22" data-t="h_cb">W-Block 22</th><th data-field="idx" data-t="h_idx">Tempo</th>
+          <th data-field="name" data-t="h_name">Ort</th><th data-field="camp_label" data-t="h_camp">Lager</th><th data-field="eligible" data-t="h_elig">Berecht.</th><th data-field="t10" data-t="h_10">10 h (Israel)</th><th data-field="t_now" data-t="h_now">Aktuell</th><th data-field="turnout22" data-t="h_22">Ende 2022</th><th data-field="nbloc22" data-t="h_nb">N-Block 22</th><th data-field="cbloc22" data-t="h_cb">W-Block 22</th><th data-field="idx" data-t="h_idx">Tempo</th>
         </tr></thead><tbody></tbody>
       </table>
     </div>
@@ -218,7 +218,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
 
 <script>
 window.IL_T={
-de:{title:'Israel-Wahl 2026 · Mobilisierung',asof:'Landeswert',locAsof:'Ortsdaten bis',hourIL:'(Uhr Israel) · laufend aktualisiert',stampTip:'Landeswert: letzte offizielle Erhebung der Wahlkommission (alle 2 Std.). Ortsdaten: Wahllokale melden laufend nach; angezeigt ist die jüngste Meldung, die in Karten, Tabelle und Indizes steckt.',upd:'Gemeldet',natTurnout:'Beteiligung landesweit',
+de:{title:'Israel-Wahl 2026 · Mobilisierung',asof:'Landeswert',locAsof:'Ortsdaten bis',hourIL:'· laufend aktualisiert',tz:'(Israel)',axisTz:'Uhrzeit Israel',h_10:'10 h (Israel)',stampTip:'Landeswert: letzte offizielle Erhebung der Wahlkommission (alle 2 Std.). Ortsdaten: Wahllokale melden laufend nach; angezeigt ist die jüngste Meldung, die in Karten, Tabelle und Indizes steckt.',upd:'Gemeldet',natTurnout:'Beteiligung landesweit',
  natTurnoutTip:'Wahlkommission (CEC), Anteil der Wahlberechtigten zur genannten Stunde. Vergleich: gleiche Stunde 2022.',
  c_rechts:'Rechts / Likud',c_haredi:'Haredi','c_mitte-links':'Mitte-links',c_raam:"Ra'am",c_joint:'Joint List',c_swing:'Swing','c_n.v.':'k. A.',places:'Orte',
  tip_rechts:'Orte, in denen der Netanjahu-Block 2022 mind. 10 Punkte vorn lag (ohne Haredi-Orte). Index gewichtet nach Wahlberechtigten; 1,00 = wie das Land.',
@@ -251,7 +251,7 @@ de:{title:'Israel-Wahl 2026 · Mobilisierung',asof:'Landeswert',locAsof:'Ortsdat
  inset:'Großraum Tel Aviv',hour:h=>`${h} Uhr`,h:'h',dec:',',
  coal:{'NB':'Netanjahu-Block','NB+R':'Netanjahu-Block + Reservisten','WB':'Wechsel-Block','WB+R':'Wechsel + Reservisten','WB+R+RA':"Wechsel + Res. + Ra'am",'WB+R+RA+J':"Wechsel + Res. + Ra'am + Joint",'U':'Einheit: Likud + Yashar + Beyachad'},
  sectors:{right:'Rechte Hochburgen',left:'Mitte-links-Hochburgen',secular:'Säkular',national_religious:'National-religiös',judea_samaria:'Judäa & Samaria',haredi:'Haredi',arab:'Arabisch',druze:'Drusisch',fsu:'Ex-UdSSR-Einwanderer',ethiopian:'Äthiopische Einwanderer',north:'Nordgrenze',gaza:'Gaza-Umland',bedouin_north:'Beduinen Nord',bedouin_south:'Beduinen Negev',christian:'Christlich'}},
-en:{title:'Israel election 2026 · Mobilisation',asof:'National figure',locAsof:'locality data to',hourIL:'(Israel time) · continuously updated',stampTip:'National figure: latest official CEC count (every 2 hrs). Locality data: polling stations report continuously; shown is the latest report included in maps, table and indices.',upd:'Reported',natTurnout:'National turnout',
+en:{title:'Israel election 2026 · Mobilisation',asof:'National figure',locAsof:'locality data to',hourIL:'· continuously updated',tz:'(Israel time)',axisTz:'Israel time',h_10:'10 h (Israel time)',stampTip:'National figure: latest official CEC count (every 2 hrs). Locality data: polling stations report continuously; shown is the latest report included in maps, table and indices.',upd:'Reported',natTurnout:'National turnout',
  natTurnoutTip:'Central Elections Committee (CEC): share of eligible voters by the given hour, vs. the same hour in 2022.',
  c_rechts:'Right / Likud',c_haredi:'Haredi','c_mitte-links':'Centre-left',c_raam:"Ra'am",c_joint:'Joint List',c_swing:'Swing','c_n.v.':'n/a',places:'places',
  tip_rechts:'Localities where the Netanyahu bloc led by at least 10 points in 2022 (excl. Haredi towns). Weighted by eligible voters; 1.00 = national pace.',
@@ -284,7 +284,7 @@ en:{title:'Israel election 2026 · Mobilisation',asof:'National figure',locAsof:
  inset:'Greater Tel Aviv',hour:h=>`${h}:00`,h:'h',dec:'.',
  coal:{'NB':'Netanyahu bloc','NB+R':'Netanyahu bloc + Reservists','WB':'Change bloc','WB+R':'Change + Reservists','WB+R+RA':"Change + Res. + Ra'am",'WB+R+RA+J':"Change + Res. + Ra'am + Joint",'U':'Unity: Likud + Yashar + Beyachad'},
  sectors:{right:'Right strongholds',left:'Centre-left strongholds',secular:'Secular',national_religious:'National religious',judea_samaria:'Judea & Samaria',haredi:'Haredi',arab:'Arab',druze:'Druze',fsu:'Former USSR immigrants',ethiopian:'Ethiopian immigrants',north:'Northern border',gaza:'Gaza envelope',bedouin_north:'Bedouin (north)',bedouin_south:'Bedouin (Negev)',christian:'Christian'}},
-he:{title:'בחירות 2026 · מוביליזציה',asof:'נתון ארצי',locAsof:'נתוני יישובים עד',hourIL:'(שעון ישראל) · מתעדכן שוטף',stampTip:'נתון ארצי: הספירה הרשמית האחרונה של ועדת הבחירות (כל שעתיים). נתוני יישובים: הקלפיות מדווחות באופן שוטף; מוצג הדיווח האחרון שנכלל במפות, בטבלה ובמדדים.',upd:'דווח',natTurnout:'אחוז הצבעה ארצי',
+he:{title:'בחירות 2026 · מוביליזציה',asof:'נתון ארצי',locAsof:'נתוני יישובים עד',hourIL:'· מתעדכן שוטף',tz:'(שעון ישראל)',axisTz:'שעון ישראל',h_10:'10:00 (שעון ישראל)',stampTip:'נתון ארצי: הספירה הרשמית האחרונה של ועדת הבחירות (כל שעתיים). נתוני יישובים: הקלפיות מדווחות באופן שוטף; מוצג הדיווח האחרון שנכלל במפות, בטבלה ובמדדים.',upd:'דווח',natTurnout:'אחוז הצבעה ארצי',
  natTurnoutTip:'ועדת הבחירות המרכזית: שיעור בעלי זכות הבחירה שהצביעו עד השעה, לעומת אותה שעה ב־2022.',
  c_rechts:'ימין / ליכוד',c_haredi:'חרדים','c_mitte-links':'מרכז־שמאל',c_raam:'רע"ם',c_joint:'הרשימה המשותפת',c_swing:'מתנדנדים','c_n.v.':'אין נתון',places:'יישובים',
  tip_rechts:'יישובים שבהם גוש נתניהו הוביל ב־10 נקודות לפחות ב־2022 (ללא ערים חרדיות). משוקלל לפי בעלי זכות בחירה; 1.00 = הקצב הארצי.',
@@ -449,7 +449,7 @@ function tipAt(tip,card,ev,lines){const t=tip.node();t.replaceChildren();t.setAt
 function drawAll(){
  const L=dash.data('latest'),M=dash.data('mob'),C=dash.data('camps'),MU=dash.data('muni'),N=dash.data('national');
  const tk=document.getElementById('takeaway');
- if(L.status==='ok'&&L.data.length){const l=L.data[0];document.getElementById('stamp').textContent=l.hour+':00';const F=dash.data('fresh');if(F.status==='ok'&&F.data.length&&F.data[0].loc_time)document.getElementById('locTime').textContent=F.data[0].loc_time;document.getElementById('natNow').textContent=pc(l.y2026);
+ if(L.status==='ok'&&L.data.length){const l=L.data[0];document.getElementById('stamp').textContent=l.hour+':00 '+T('tz');const F=dash.data('fresh');if(F.status==='ok'&&F.data.length&&F.data[0].loc_time)document.getElementById('locTime').textContent=F.data[0].loc_time+' '+T('tz');document.getElementById('natNow').textContent=pc(l.y2026);
   document.getElementById('natThen').textContent=pc(l.y2022);const d=document.getElementById('natDelta');d.textContent=(l.delta>0?'+':'')+pp(l.delta)+' '+T('pts');d.className=l.delta>=0?'il-up':'il-down';}
  if(C.status==='ok'){
   document.querySelectorAll('[data-source=camps][data-where]').forEach(el=>{const k=el.getAttribute('data-where').split('=')[1];const r=C.data.find(c=>c.camp===k);const fld=el.getAttribute('data-field');
@@ -461,7 +461,7 @@ function drawAll(){
  if(N.status==='ok'){const e=N.data.find(r=>Number(r.hour)===22);if(e&&e.est!=null){document.getElementById('natEst').textContent=pc(e.est);document.getElementById('natLo').textContent=pp(e.lo);document.getElementById('natHi').textContent=pc(e.hi);}}
  if(M.status==='ok'){const by=new Map(M.data.map(m=>[m.code,m]));const col=d3.scaleLinear([0.8,1,1.2],['#d64545','#f2f2f2','#1e9e5a']).clamp(true);
   drawMap('map1',c=>{const m=by.get(c);return m&&m.idx!=null?col(m.idx):null;},c=>{const m=by.get(c);if(!m)return null;
-   return [nm(m),`${T('now')} (${m.hour}:00): ${pc(m.t_now)}`,`${T('end22')}: ${pc(m.turnout22)}`,`${T('idx')}: ${ix(m.idx)}`,`${T('camp')}: ${CN(m.camp)}`,`${T('upd')}: ${m.updated||'—'}`];});}
+   return [nm(m),`${T('now')} (${m.hour}:00 ${T('tz')}): ${pc(m.t_now)}`,`${T('end22')}: ${pc(m.turnout22)}`,`${T('idx')}: ${ix(m.idx)}`,`${T('camp')}: ${CN(m.camp)}`,`${T('upd')}: ${m.updated?m.updated+' '+T('tz'):'—'}`];});}
  if(MU.status==='ok'){const by=new Map(MU.data.map(m=>[m.code,m]));
   drawMap('map2',c=>{const m=by.get(c);if(!m||!CAMPC[m.camp])return null;const mg=m.camp==='raam'||m.camp==='joint'?m.arab22-50:m.camp==='haredi'?40:Math.abs(m.nbloc22-m.cbloc22);
    return d3.interpolateRgb('#ffffff',CAMPC[m.camp])(Math.min(1,.35+mg/60));},
@@ -474,9 +474,10 @@ function drawDay(N){const svg=d3.select('#day');svg.selectAll('*').remove();if(N
  svg.attr('viewBox',`0 0 ${W} ${H}`);const x=d3.scaleLinear([8,22],[m.l,W-m.r]),y=d3.scaleLinear([0,80],[H-m.b,m.t]);
  y.ticks(4).forEach(t=>{svg.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(t)).attr('y2',y(t)).attr('stroke','var(--cds-chart-grid)');svg.append('text').attr('x',m.l-5).attr('y',y(t)+3).attr('text-anchor','end').attr('font-size',10).attr('fill','var(--color-fg-muted)').text(t);});
  [8,10,12,14,16,18,20,22].forEach(h=>svg.append('text').attr('x',x(h)).attr('y',H-6).attr('text-anchor','middle').attr('font-size',10).attr('fill','var(--color-fg-muted)').text(h+':00'));
+ svg.append('text').attr('x',W-m.r).attr('y',m.t+2).attr('text-anchor','end').attr('font-size',10).attr('fill','var(--color-fg-muted)').text(T('axisTz'));
  const pts=k=>[{h:7,v:0}].concat(N.data.filter(r=>r[k]!=null).map(r=>({h:Number(r.hour),v:Number(r[k])})).sort((a,b)=>a.h-b.h));const tip=d3.select('#tip0');
  [['y2022','#9aa5b1'],['y2026','#0038b8']].forEach(([k,c])=>{const p=pts(k).filter(d=>d.h>=8||d.v===0).map(d=>d.h<8?{h:8,v:0}:d);svg.append('path').attr('d',d3.line().x(d=>x(d.h)).y(d=>y(d.v))(p)).attr('fill','none').attr('stroke',c).attr('stroke-width',2).attr('stroke-linecap','round').attr('stroke-linejoin','round');
-  p.slice(1).forEach(d=>svg.append('circle').attr('cx',x(d.h)).attr('cy',y(d.v)).attr('r',3.5).attr('fill',c).on('mousemove',ev=>tipAt(tip,card,ev,[T('hour')(d.h),`${k==='y2026'?'2026':'2022'}: ${pc(d.v)}`])).on('mouseleave',()=>tip.style('opacity',0)));});
+  p.slice(1).forEach(d=>svg.append('circle').attr('cx',x(d.h)).attr('cy',y(d.v)).attr('r',3.5).attr('fill',c).on('mousemove',ev=>tipAt(tip,card,ev,[T('hour')(d.h)+' '+T('tz'),`${k==='y2026'?'2026':'2022'}: ${pc(d.v)}`])).on('mouseleave',()=>tip.style('opacity',0)));});
  const e=N.data.find(r=>Number(r.hour)===22);if(e&&e.est!=null){const X=x(22)-6;svg.append('line').attr('x1',X).attr('x2',X).attr('y1',y(e.lo)).attr('y2',y(e.hi)).attr('stroke','#0038b8').attr('stroke-width',6).attr('stroke-opacity',.2).attr('stroke-linecap','round');
   svg.append('circle').attr('cx',X).attr('cy',y(e.est)).attr('r',4).attr('fill','var(--color-panel)').attr('stroke','#0038b8').attr('stroke-width',2).on('mousemove',ev=>tipAt(tip,card,ev,[T('projT'),`${pc(e.est)} (${pp(e.lo)}–${pc(e.hi)})`])).on('mouseleave',()=>tip.style('opacity',0));}}
 
@@ -487,7 +488,7 @@ function drawSec(SD){const svg=d3.select('#sec');svg.selectAll('*').remove();if(
  rows.forEach((r,i)=>{const y=i*rh+4;const v=Math.max(0.75,Math.min(1.25,r.idx));const c=r.idx>=1.03?'#1e9e5a':r.idx<=0.97?'#d64545':'#9aa5b1';const lab=SL[r.sector]||r.label;
   svg.append('text').attr('x',0).attr('y',y+13).attr('font-size',11).attr('fill','var(--color-fg)').text(lab);
   svg.append('rect').attr('x',Math.min(x(1),x(v))).attr('y',y+3).attr('width',Math.max(1,Math.abs(x(v)-x(1)))).attr('height',13).attr('rx',3).attr('fill',c)
-   .on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('now')} (${r.hour}:00): ${pc(r.t_now)}`,`${T('end22')}: ${pc(r.turnout22)}`,`${T('est')}: ${pc(r.est)} (${pp(r.lo)}–${pc(r.hi)})`,T('rep')(fk(r.stations),fk(r.stations_total))])).on('mouseleave',()=>tip.style('opacity',0));
+   .on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('now')} (${r.hour}:00 ${T('tz')}): ${pc(r.t_now)}`,`${T('end22')}: ${pc(r.turnout22)}`,`${T('est')}: ${pc(r.est)} (${pp(r.lo)}–${pc(r.hi)})`,T('rep')(fk(r.stations),fk(r.stations_total))])).on('mouseleave',()=>tip.style('opacity',0));
   svg.append('text').attr('x',r.idx>=1?x(v)+4:x(v)-4).attr('text-anchor',r.idx>=1?'start':'end').attr('y',y+13).attr('font-size',10.5).attr('font-weight',600).attr('fill',c).text(ix(r.idx));});}
 
 function drawSoc(){const svg=d3.select('#soc');svg.selectAll('*').remove();const SO=dash.data('society'),SD=dash.data('sectors');const leg=document.getElementById('famLeg');leg.replaceChildren();if(SO.status!=='ok')return;
