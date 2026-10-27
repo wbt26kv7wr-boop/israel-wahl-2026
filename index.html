@@ -34,7 +34,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
   onData:fn=>{subs.push(fn);try{fn();}catch(e){console.error(e);}},loader:()=>{},colors:[],refresh:()=>load(),params:()=>({}),setParams:()=>{},resetParams:()=>{},setLink:()=>{}};
  function load(){const v=Date.now();Promise.all(IDS.map(id=>fetch('data/'+id+'.json?v='+v).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
   .then(d=>{store[id]={status:'ok',data:d};}).catch(()=>{store[id]={status:'error',data:[]};}))).then(emit);
-  fetch('data/status.json?v='+v).then(r=>r.json()).then(s=>{const el=document.getElementById('updAt');if(el&&s.generated){const d=new Date(s.generated),f=z=>d.toLocaleString('de-DE',{timeZone:z,day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});el.textContent=f('Europe/Berlin')+' MEZ / '+f('Asia/Jerusalem')+' Israel';}}).catch(()=>{});}
+  fetch('data/status.json?v='+v).then(r=>r.json()).then(s=>{const el=document.getElementById('updAt');if(el&&s.generated){const d=new Date(s.generated),f=z=>d.toLocaleString('de-DE',{timeZone:z,day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});el.textContent='\u2066'+f('Europe/Berlin')+' MEZ / '+f('Asia/Jerusalem')+' Israel\u2069';}}).catch(()=>{});}
  let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>subs.forEach(f=>f()),150);});
  window.addEventListener('DOMContentLoaded',()=>{load();setInterval(load,5*60*1000);});
 })();
@@ -114,7 +114,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     <div class="il-card il-tile">
       <div class="il-lbl"><span data-t="projT">Prognose Endbeteiligung</span> <button class="ib" data-tt="projTip">i</button></div>
       <div class="il-big" data-source="national" data-field="est" data-where="hour=22" id="natEst">—</div>
-      <div class="il-sub"><span data-t="range">Spanne</span> <span data-source="national" data-field="lo" data-where="hour=22" id="natLo">—</span>–<span data-source="national" data-field="hi" data-where="hour=22" id="natHi">—</span></div>
+      <div class="il-sub"><span data-t="range">Spanne</span> <span dir="ltr" style="unicode-bidi:isolate"><span data-source="national" data-field="lo" data-where="hour=22" id="natLo">—</span>–<span data-source="national" data-field="hi" data-where="hour=22" id="natHi">—</span></span></div>
     </div>
   </div>
 
@@ -386,7 +386,7 @@ const PCOL={"Yashar":"#1d6fd8","Likud":"#0038b8","Beyachad":"#4bb3e6","Demokrate
 const pcol=p=>{const k=Object.keys(PCOL).find(k=>p.startsWith(k));return k?PCOL[k]:'#999';};
 const CAMPC={rechts:'#0038b8',haredi:'#3a3a3a','mitte-links':'#4bb3e6',raam:'#15803d',joint:'#d39b1a',swing:'#a0a8b3'};
 const num=(v,d)=>{const s=v.toFixed(d);return T('dec')===','?s.replace('.',','):s;};
-const pc=v=>v==null?'—':num(Number(v),1)+' %';const ix=v=>v==null?'—':num(Number(v),2);const pp=v=>v==null?'—':num(Number(v),1);
+const pc=v=>v==null?'—':num(Number(v),1)+(lang==='de'?' %':'%');const ix=v=>v==null?'—':num(Number(v),2);const pp=v=>v==null?'—':num(Number(v),1);
 const fk=v=>v==null?'—':Number(v).toLocaleString(lang==='de'?'de-DE':lang==='he'?'he-IL':'en-US');
 const nm=m=>lang==='he'&&m.name_he?m.name_he:m.name;
 let scen='m50';let sortKey='eligible',sortDir=-1;
@@ -402,6 +402,19 @@ function applyLang(){const root=document.getElementById('il');root.setAttribute(
  document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));}
 document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;applyLang();drawAll();}));
 applyLang();
+
+// ---------- Bidi: Zahlen in Hebräisch als LTR-Inseln, hebräische SVG-Texte als RTL ----------
+const LRI='\u2066',RLI='\u2067',PDI='\u2069';
+const NUMRE=/[+\-\u2212\u00b1]?\d[\d.,:]*(?:\s?%)?(?:\s?[\u2013-]\s?\d[\d.,:]*(?:\s?%)?)?/g;
+const HEB=/[\u0590-\u05FF]/;
+let bidiBusy=false;
+function bidiFix(){if(lang!=='he'||bidiBusy)return;bidiBusy=true;const root=document.getElementById('il');
+ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+ nodes.forEach(n=>{const t=n.nodeValue;if(!t||t.indexOf(LRI)>=0||t.indexOf(RLI)>=0)return;const svgText=n.parentNode&&n.parentNode.namespaceURI==='http://www.w3.org/2000/svg';
+  let t2=HEB.test(t)||svgText?t.replace(NUMRE,m=>LRI+m+PDI):t;if(svgText&&HEB.test(t))t2=RLI+t2+PDI;if(!HEB.test(t)&&!svgText&&/^[+\-\u2212\u00b1]/.test(t.trim()))t2=LRI+t+PDI;
+  if(!HEB.test(t)&&!svgText&&/%/.test(t)&&t2===t)t2=LRI+t+PDI;if(t2!==t)n.nodeValue=t2;});
+ bidiBusy=false;}
+new MutationObserver(()=>{if(lang==='he')bidiFix();}).observe(document.getElementById('il'),{childList:true,subtree:true,characterData:true});
 
 // ---------- own Mercator (no d3-geo needed) ----------
 const MX=lon=>lon*Math.PI/180,MY=lat=>Math.log(Math.tan(Math.PI/4+lat*Math.PI/360));
@@ -584,11 +597,15 @@ function drawCoal(CO){const svg=d3.select('#coal');svg.selectAll('*').remove();i
 })();
 </script>
 
-<div class="il-foot">
-Daten: Zentrale Wahlkommission Israel (<a href="https://mapvotes.bechirot.gov.il/">mapvotes.bechirot.gov.il</a>, Ergebnisse 2022: media25.bechirot.gov.il) ·
-Sektoren und Prognosemethode: <a href="https://votes26.com/?v=sectors">votes26.com</a> · Umfragen: Kan, Kanal 12, Kanal 13 (23.10.2026) ·
-Karte: Natural Earth. Sitzverteilung = einfaches Modell, keine Prognose. Zuletzt aktualisiert: <span id="updAt">–</span>
-</div>
+<div class="il-foot" id="ilFoot"><span id="footTxt"></span> <span id="updAt">–</span></div>
+<script>
+(function(){const F={
+de:'Daten: Zentrale Wahlkommission Israel (mapvotes.bechirot.gov.il; Ergebnisse 2022: media25.bechirot.gov.il) · Sektoren und Prognosemethode: votes26.com · Umfragen: Kan, Kanal 12, Kanal 13 (23.10.2026) · Karte: Natural Earth. Sitzverteilung = einfaches Modell, keine Prognose. Zuletzt aktualisiert:',
+en:'Data: Central Elections Committee of Israel (mapvotes.bechirot.gov.il; 2022 results: media25.bechirot.gov.il) · Sectors and projection method: votes26.com · Polls: Kan, Channel 12, Channel 13 (23 Oct 2026) · Map: Natural Earth. Seat distribution = simple model, not a forecast. Last updated:',
+he:'נתונים: ועדת הבחירות המרכזית (mapvotes.bechirot.gov.il; תוצאות 2022: media25.bechirot.gov.il) · מגזרים ושיטת התחזית: votes26.com · סקרים: כאן, חדשות 12, חדשות 13 (23.10.2026) · מפה: Natural Earth. חלוקת המנדטים = מודל פשוט, לא תחזית. עודכן לאחרונה:'};
+function set(l){const f=document.getElementById('ilFoot');f.setAttribute('dir',l==='he'?'rtl':'ltr');document.getElementById('footTxt').textContent=F[l];document.documentElement.setAttribute('lang',l);document.documentElement.setAttribute('dir',l==='he'?'rtl':'ltr');}
+set('de');document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>set(b.dataset.lang)));})();
+</script>
 </div>
 </body>
 </html>
