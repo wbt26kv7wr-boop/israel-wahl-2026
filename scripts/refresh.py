@@ -185,7 +185,7 @@ if "--geo" in sys.argv:
 # ---------- sectors (station level, votes26.com assignment) ----------
 SEC_DE = {"right":"Rechte Hochburgen","left":"Mitte-links-Hochburgen","secular":"Säkular","national_religious":"National-religiös",
  "judea_samaria":"Judäa & Samaria","haredi":"Haredi","arab":"Arabisch","druze":"Drusisch","fsu":"Ex-UdSSR-Einwanderer",
- "ethiopian":"Äthiopische Einwanderer","north":"Nordgrenze","gaza":"Gaza-Umland"}
+ "ethiopian":"Äthiopische Einwanderer","north":"Nordgrenze","gaza":"Gaza-Umland","bedouin_north":"Beduinen Nord","bedouin_south":"Beduinen Negev","christian":"Christlich"}
 sp = os.path.join(DL, "v26", "sectors.json")
 if not os.path.exists(sp):
     os.makedirs(os.path.dirname(sp), exist_ok=True); get("https://votes26.com/data/sectors.json", sp)
