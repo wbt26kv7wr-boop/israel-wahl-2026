@@ -77,7 +77,8 @@ if nat_prev is not None and str(PREV) not in hist["national"]:
 for code, f in live["features"].items():
     m = hist["muni"].setdefault(code, {})
     m[str(HOUR)] = f.get("percent")
-    if f.get("prev_percent") is not None and str(PREV) not in m:
+    # prev_percent der Ortsdatei ist ein unvollständiger Zwischenstand, nicht mit dem Landeswert vergleichbar -> nur 10 Uhr behalten
+    if f.get("prev_percent") is not None and str(PREV) not in m and PREV == 10:
         m[str(PREV)] = f["prev_percent"]
 json.dump(hist, open(hist_p, "w"))
 
