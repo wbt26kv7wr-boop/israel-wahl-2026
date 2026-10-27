@@ -390,6 +390,10 @@ const pc=v=>v==null?'—':num(Number(v),1)+' %';const ix=v=>v==null?'—':num(Nu
 const fk=v=>v==null?'—':Number(v).toLocaleString(lang==='de'?'de-DE':lang==='he'?'he-IL':'en-US');
 const nm=m=>lang==='he'&&m.name_he?m.name_he:m.name;
 let scen='m50';let sortKey='eligible',sortDir=-1;
+let socEl=25;
+const FAM=['likud','shas','utj','rz','yb','center','left','arab','other'];
+const FAMC={likud:'#0038b8',shas:'#111111',utj:'#4a4a4a',rz:'#c48a1d',yb:'#6a4fb3',center:'#4bb3e6',left:'#e0457b',arab:'#2e9e5b',other:'#c8ced6'};
+
 
 function applyLang(){const root=document.getElementById('il');root.setAttribute('dir',lang==='he'?'rtl':'ltr');root.setAttribute('lang',lang);
  root.querySelectorAll('[data-t]').forEach(el=>{const v=T(el.getAttribute('data-t'));if(typeof v==='string')el.textContent=v;});
@@ -486,9 +490,6 @@ function drawSec(SD){const svg=d3.select('#sec');svg.selectAll('*').remove();if(
    .on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('now')} (${r.hour}:00): ${pc(r.t_now)}`,`${T('end22')}: ${pc(r.turnout22)}`,`${T('est')}: ${pc(r.est)} (${pp(r.lo)}–${pc(r.hi)})`,T('rep')(fk(r.stations),fk(r.stations_total))])).on('mouseleave',()=>tip.style('opacity',0));
   svg.append('text').attr('x',r.idx>=1?x(v)+4:x(v)-4).attr('text-anchor',r.idx>=1?'start':'end').attr('y',y+13).attr('font-size',10.5).attr('font-weight',600).attr('fill',c).text(ix(r.idx));});}
 
-let socEl=25;
-const FAM=['likud','shas','utj','rz','yb','center','left','arab','other'];
-const FAMC={likud:'#0038b8',shas:'#111111',utj:'#4a4a4a',rz:'#c48a1d',yb:'#6a4fb3',center:'#4bb3e6',left:'#e0457b',arab:'#2e9e5b',other:'#c8ced6'};
 function drawSoc(){const svg=d3.select('#soc');svg.selectAll('*').remove();const SO=dash.data('society'),SD=dash.data('sectors');const leg=document.getElementById('famLeg');leg.replaceChildren();if(SO.status!=='ok')return;
  const card=document.getElementById('socCard'),tip=d3.select('#tip5');const W=Math.max(300,card.clientWidth-48);const SL=T('sectors'),FL=T('fam');
  const cur=SO.data.filter(r=>Number(r.election)===socEl);const ref=SO.data.filter(r=>Number(r.election)===25);const now=SD.status==='ok'?SD.data:[];
