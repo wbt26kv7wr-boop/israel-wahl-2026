@@ -304,6 +304,9 @@ for row in muni:
     if not s22 or row["code"] not in _by: continue
     g = "arab" if row.get("camp") in ("raam", "joint") else "jewish"
     ie, it, mt = tod_idx(_by[row["code"]], s22["turnout22"], g)
-    row.update(idx_end=ie, idx_tod=it, rep_time=mt, profile=g)
+    _t = _hm(mt) if mt else None
+    row.update(idx_end=ie, idx_tod=it, rep_time=mt, profile=g,
+               same22=round(s22["turnout22"] * prof_at(g, _t), 1) if _t else None,
+               nat26_t=round(nat26_at(_t), 1) if _t else None, nat22_t=round(_interp(N22, _t), 1) if _t else None)
 json.dump(muni, open(os.path.join(OUT, "muni.json"), "w"), ensure_ascii=False)
 print("tod", [(m["name"], m.get("idx_end"), m.get("idx_tod")) for m in muni if m["code"] in (5000, 3000, 6100, 1161, 7300, 7400)])
