@@ -103,6 +103,7 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     </div>
     <p id="takeaway" class="dash-skeleton">—</p>
     <span class="il-stamp"><span data-t="asof">Landeswert</span> <span data-source="latest" data-field="hour" id="stamp">—</span> · <span data-t="locAsof">Ortsdaten bis</span> <span data-source="fresh" data-field="loc_time" id="locTime">—</span> <span data-t="hourIL">(Uhr Israel) · laufend aktualisiert</span> <button class="ib" data-tt="stampTip">i</button></span>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap"><div class="il-seg" role="group" id="basisSeg" style="margin:0"><button data-b="tod" aria-pressed="true" data-t="b_tod">Vergleich: gleiche Uhrzeit 2022</button><button data-b="end" aria-pressed="false" data-t="b_end">Vergleich: Endergebnis 2022</button></div><button class="ib" data-tt="basisTip">i</button></div>
   </div>
 
   <div class="il-tiles" id="tiles">
@@ -322,15 +323,15 @@ window.IL_PARTY={
  en:{'Yashar (Eisenkot)':'Yashar (Eisenkot)','Likud (Netanjahu)':'Likud (Netanyahu)','Beyachad (Bennett)':'Beyachad (Bennett)','Demokraten (Golan)':'Democrats (Golan)','Joint List':'Joint List','Yisrael Beytenu (Liberman)':'Yisrael Beytenu (Liberman)','Otzma Yehudit (Ben-Gvir)':'Otzma Yehudit (Ben-Gvir)','UTJ':'UTJ','Shas (Deri)':'Shas (Deri)','Religiöser Zionismus (Smotrich)':'Religious Zionism (Smotrich)',"Ra'am (Abbas)":"Ra'am (Abbas)",'Reservisten (Hendel)':'Reservists (Hendel)','Am Yisrael (Winter)':'Am Yisrael (Winter)','Haredi Public (Leitner)':'Haredi Public (Leitner)'},
  he:{'Yashar (Eisenkot)':'ישר (איזנקוט)','Likud (Netanjahu)':'הליכוד (נתניהו)','Beyachad (Bennett)':'ביחד (בנט)','Demokraten (Golan)':'הדמוקרטים (גולן)','Joint List':'הרשימה המשותפת','Yisrael Beytenu (Liberman)':'ישראל ביתנו (ליברמן)','Otzma Yehudit (Ben-Gvir)':'עוצמה יהודית (בן גביר)','UTJ':'יהדות התורה','Shas (Deri)':'ש"ס (דרעי)','Religiöser Zionismus (Smotrich)':'הציונות הדתית (סמוטריץ׳)',"Ra'am (Abbas)":'רע"ם (עבאס)','Reservisten (Hendel)':'המילואימניקים (הנדל)','Am Yisrael (Winter)':'עם ישראל (וינטר)','Haredi Public (Leitner)':'הציבור החרדי (לייטנר)'}};
 
-Object.assign(window.IL_T.de,{blocs:{Wechsel:'Wechsel-Block (Mitte-links)',Arabisch:'Arabische Parteien',Offen:'Ohne Block',Netanjahu:'Netanjahu-Block (rechts)'},campT:'Lager nach Hochburgen',campTip:'Tempo-Index je Lager, aus den Orten, in denen das Lager 2022 vorn lag; gewichtet nach Wahlberechtigten. 1,00 = wie das Land. Details zu jedem Lager im Tooltip.',campNote:'Tempo-Index; Balken rechts = stärker als sonst',perfT:'Über- und Unterperformance der Parteien',mobGrad:'Mobilisierungsgrad',perfTip:'Mobilisierungsgrad: Index des Wählermilieus jeder Partei (aus den Lager-Hochburgen; Shas, Yisrael Beytenu, Reservisten als Mischwert); über 1 = Milieu wählt stärker als sonst. Balken und Zahl rechts: Stimmanteil im gewählten Szenario gegenüber der Umfrage, in Prozentpunkten. Im Szenario „Umfrage“ sind alle Abweichungen 0.',perfNote:'Abweichung vom Umfrage-Stimmanteil in Prozentpunkten · Mobilisierungsgrad des Wählermilieus',projT:'Prognose Endbeteiligung',projTip:'Methode votes26.com: Regression der Endbeteiligung auf den Stand zur selben Stunde, Wahlen 2003–2022; Spanne = Prognoseintervall.',range:'Spanne',
+Object.assign(window.IL_T.de,{b_tod:'Vergleich: gleiche Uhrzeit 2022',b_end:'Vergleich: Endergebnis 2022',basisTip:'Gleiche Uhrzeit: Jede Urne wird zu ihrer Meldezeit mit dem Stand verglichen, den ihr Ort 2022 zur selben Uhrzeit hatte – geschätzt aus Endergebnis 2022 × Tagesverlauf 2022 (jüdisch bzw. arabisch). Ortsgenaue Stundenwerte 2022 gibt es nicht; der arabische Verlauf 2022 beruht auf Schätzungen (Hadash-Ta’al, Accord-Zentrum, JPost) und ist unsicher. Endergebnis: Vergleich mit der Endbeteiligung 2022, ohne Tagesverlauf. Beide berücksichtigen die Meldezeit jeder Urne.',blocs:{Wechsel:'Wechsel-Block (Mitte-links)',Arabisch:'Arabische Parteien',Offen:'Ohne Block',Netanjahu:'Netanjahu-Block (rechts)'},campT:'Lager nach Hochburgen',campTip:'Tempo-Index je Lager, aus den Orten, in denen das Lager 2022 vorn lag; gewichtet nach Wahlberechtigten. 1,00 = wie das Land. Details zu jedem Lager im Tooltip.',campNote:'Tempo-Index; Balken rechts = stärker als sonst',perfT:'Über- und Unterperformance der Parteien',mobGrad:'Mobilisierungsgrad',perfTip:'Mobilisierungsgrad: Index des Wählermilieus jeder Partei (aus den Lager-Hochburgen; Shas, Yisrael Beytenu, Reservisten als Mischwert); über 1 = Milieu wählt stärker als sonst. Balken und Zahl rechts: Stimmanteil im gewählten Szenario gegenüber der Umfrage, in Prozentpunkten. Im Szenario „Umfrage“ sind alle Abweichungen 0.',perfNote:'Abweichung vom Umfrage-Stimmanteil in Prozentpunkten · Mobilisierungsgrad des Wählermilieus',projT:'Prognose Endbeteiligung',projTip:'Methode votes26.com: Regression der Endbeteiligung auf den Stand zur selben Stunde, Wahlen 2003–2022; Spanne = Prognoseintervall.',range:'Spanne',
  soc:'Israels Gesellschaft nach Sektoren',socTip:'Sektoren und Stimmbezirks-Zuordnung von votes26.com (CBS-Statistikgebiete). Sektoren überschneiden sich (z. B. Ex-UdSSR ⊂ säkular). Balken: Wahlberechtigte, Stimmanteile der Parteifamilien, Beteiligung 2019–2022 und Prognose 2026.',
  size:'Berechtigte',share:'Stimmanteile',turnoutHist:'Beteiligung',p26:'Prognose 2026',
  fam:{likud:'Likud',shas:'Shas',utj:'UTJ',rz:'Rel. Zionismus',yb:'Yisrael Beytenu',center:'Mitte',left:'Links',arab:'Arab. Parteien',other:'Andere'}});
-Object.assign(window.IL_T.en,{blocs:{Wechsel:'Change bloc (centre-left)',Arabisch:'Arab parties',Offen:'Unaligned',Netanjahu:'Netanyahu bloc (right)'},campT:'Camps by stronghold',campTip:'Pace index per camp, from the localities the camp led in 2022; weighted by eligible voters. 1.00 = national pace. Details on each camp in the tooltip.',campNote:'Pace index; bars to the right = stronger than usual',perfT:'Party over- and underperformance',mobGrad:'Mobilisation',perfTip:"Mobilisation: index of each party's voter milieu (from camp strongholds; Shas, Yisrael Beytenu and the Reservists as blends); above 1 = milieu turning out more than usual. Bars and number on the right: vote share in the selected scenario vs. the poll, in percentage points. In the 'Poll' scenario all deviations are 0.",perfNote:'Deviation from poll vote share in percentage points · mobilisation of the voter milieu',projT:'Projected final turnout',projTip:'votes26.com method: regression of final turnout on turnout at the same hour, elections 2003–2022; range = prediction interval.',range:'Range',
+Object.assign(window.IL_T.en,{b_tod:'Compare: same hour 2022',b_end:'Compare: final 2022',basisTip:'Same hour: each ballot box is compared at its own report time with the level its locality had at that hour in 2022, estimated as final 2022 × 2022 hourly curve (Jewish or Arab). Locality-level hourly figures for 2022 do not exist; the 2022 Arab curve rests on estimates (Hadash-Ta’al, Accord Center, JPost) and is uncertain. Final: compared with final 2022 turnout, without the hourly curve. Both account for each box’s report time.',blocs:{Wechsel:'Change bloc (centre-left)',Arabisch:'Arab parties',Offen:'Unaligned',Netanjahu:'Netanyahu bloc (right)'},campT:'Camps by stronghold',campTip:'Pace index per camp, from the localities the camp led in 2022; weighted by eligible voters. 1.00 = national pace. Details on each camp in the tooltip.',campNote:'Pace index; bars to the right = stronger than usual',perfT:'Party over- and underperformance',mobGrad:'Mobilisation',perfTip:"Mobilisation: index of each party's voter milieu (from camp strongholds; Shas, Yisrael Beytenu and the Reservists as blends); above 1 = milieu turning out more than usual. Bars and number on the right: vote share in the selected scenario vs. the poll, in percentage points. In the 'Poll' scenario all deviations are 0.",perfNote:'Deviation from poll vote share in percentage points · mobilisation of the voter milieu',projT:'Projected final turnout',projTip:'votes26.com method: regression of final turnout on turnout at the same hour, elections 2003–2022; range = prediction interval.',range:'Range',
  soc:"Israel's society by sector",socTip:'Sectors and polling-station assignment from votes26.com (CBS statistical areas). Sectors overlap (e.g. former USSR ⊂ secular). Bars: eligible voters, vote shares of party families, turnout 2019–2022 and 2026 projection.',
  size:'Eligible',share:'Vote shares',turnoutHist:'Turnout',p26:'2026 projection',
  fam:{likud:'Likud',shas:'Shas',utj:'UTJ',rz:'Rel. Zionism',yb:'Yisrael Beytenu',center:'Centre',left:'Left',arab:'Arab parties',other:'Other'}});
-Object.assign(window.IL_T.he,{blocs:{Wechsel:'גוש השינוי (מרכז־שמאל)',Arabisch:'מפלגות ערביות',Offen:'ללא גוש',Netanjahu:'גוש נתניהו (ימין)'},campT:'מחנות לפי מעוזים',campTip:'מדד קצב לכל מחנה, מהיישובים שבהם המחנה הוביל ב־2022; משוקלל לפי בעלי זכות בחירה. 1.00 = הקצב הארצי.',campNote:'מדד קצב; עמודה ימינה = חזק מהרגיל',perfT:'ביצועי המפלגות מעל ומתחת לצפוי',mobGrad:'מוביליזציה',perfTip:'עמודות: מדד המוביליזציה של קהל הבוחרים של כל מפלגה (ממעוזי המחנות; ש"ס, ישראל ביתנו והמילואימניקים כשילוב). מימין ל־1 = הקהל מצביע יותר מהרגיל. המספר מימין: מנדטים בתרחיש הנבחר מול הסקר.',perfNote:'מדד מוביליזציה של קהל הבוחרים · מנדטים מול הסקר',projT:'תחזית אחוז הצבעה סופי',projTip:'שיטת votes26.com: רגרסיה של אחוז ההצבעה הסופי על אחוז ההצבעה באותה שעה, בחירות 2003–2022; טווח = רווח ניבוי.',range:'טווח',
+Object.assign(window.IL_T.he,{b_tod:'השוואה: אותה שעה ב־2022',b_end:'השוואה: תוצאה סופית 2022',basisTip:'אותה שעה: כל קלפי מושווית בשעת הדיווח שלה לרמה שהייתה ביישוב באותה שעה ב־2022, לפי הערכה (תוצאה סופית 2022 × מהלך השעות 2022, יהודי או ערבי). אין נתוני שעות ברמת יישוב ל־2022; מהלך השעות במגזר הערבי מבוסס על הערכות ואינו ודאי. תוצאה סופית: השוואה לאחוז ההצבעה הסופי ב־2022.',blocs:{Wechsel:'גוש השינוי (מרכז־שמאל)',Arabisch:'מפלגות ערביות',Offen:'ללא גוש',Netanjahu:'גוש נתניהו (ימין)'},campT:'מחנות לפי מעוזים',campTip:'מדד קצב לכל מחנה, מהיישובים שבהם המחנה הוביל ב־2022; משוקלל לפי בעלי זכות בחירה. 1.00 = הקצב הארצי.',campNote:'מדד קצב; עמודה ימינה = חזק מהרגיל',perfT:'ביצועי המפלגות מעל ומתחת לצפוי',mobGrad:'מוביליזציה',perfTip:'עמודות: מדד המוביליזציה של קהל הבוחרים של כל מפלגה (ממעוזי המחנות; ש"ס, ישראל ביתנו והמילואימניקים כשילוב). מימין ל־1 = הקהל מצביע יותר מהרגיל. המספר מימין: מנדטים בתרחיש הנבחר מול הסקר.',perfNote:'מדד מוביליזציה של קהל הבוחרים · מנדטים מול הסקר',projT:'תחזית אחוז הצבעה סופי',projTip:'שיטת votes26.com: רגרסיה של אחוז ההצבעה הסופי על אחוז ההצבעה באותה שעה, בחירות 2003–2022; טווח = רווח ניבוי.',range:'טווח',
  soc:'החברה הישראלית לפי מגזרים',socTip:'מגזרים ושיוך קלפיות מ־votes26.com (אזורים סטטיסטיים של הלמ"ס). המגזרים חופפים חלקית. עמודות: בעלי זכות בחירה, חלוקת הקולות לפי משפחות מפלגות, אחוז הצבעה 2019–2022 ותחזית 2026.',
  size:'בעלי זכות',share:'חלוקת קולות',turnoutHist:'אחוז הצבעה',p26:'תחזית 2026',
  fam:{likud:'ליכוד',shas:'ש"ס',utj:'יהדות התורה',rz:'ציונות דתית',yb:'ישראל ביתנו',center:'מרכז',left:'שמאל',arab:'מפלגות ערביות',other:'אחרות'}});
@@ -345,7 +346,7 @@ dash.calc('latest',{inputs:['national'],title:'Letzter Stand landesweit',descrip
  fn:(national)=>{const r=national.filter(x=>x.y2026!==null&&x.y2026!==undefined).map(x=>({hour:Number(x.hour),y2026:Number(x.y2026),y2022:x.y2022==null?null:Number(x.y2022)})).sort((a,b)=>a.hour-b.hour);
   const l=r[r.length-1];return [{hour:l.hour,y2026:l.y2026,y2022:l.y2022,delta:l.y2022==null?null:Math.round((l.y2026-l.y2022)*10)/10}];}});
 
-dash.calc('mob',{inputs:['muni','turnout','national'],title:'Tempo-Index je Ort',description:'Beteiligung jetzt ÷ Endbeteiligung 2022, relativ zum selben Verhältnis landesweit.',
+dash.calc('mob',{inputs:['muni','turnout','national'],title:'Tempo-Index je Ort',description:'Je Stimmbezirk zur eigenen Meldezeit: Beteiligung ÷ erwarteter Wert (Endbeteiligung 2022 × Landesverlauf 2026); uhrzeitbereinigt zusätzlich mit dem Tagesverlauf 2022 (jüdisch/arabisch). Vorberechnet in muni.',
  fn:(muni,turnout,national)=>{
   const nat={};national.forEach(n=>{if(n.y2026!==null&&n.y2026!==undefined)nat[Number(n.hour)]=Number(n.y2026);});
   const fin=Number(national.find(n=>Number(n.hour)===22).y2022);
@@ -354,29 +355,33 @@ dash.calc('mob',{inputs:['muni','turnout','national'],title:'Tempo-Index je Ort'
   return muni.map(m=>{const t=T[m.code]||{};const b=m.turnout22==null?null:Number(m.turnout22);
    const ix=h=>h==null||t[h]==null||!b?null:Math.round(((t[h]/b)/(nat[h]/fin))*100)/100;
    return {code:m.code,updated:m.updated||null,name:m.name,name_he:m.name_he,camp:m.camp,camp_label:m.camp,eligible:m.eligible,t10:t[10]==null?null:t[10],t_now:t[H]==null?null:t[H],hour:H,
-    turnout22:b,nbloc22:m.nbloc22,cbloc22:m.cbloc22,arab22:m.arab22,idx:ix(H),idx_prev:ix(P)};});}});
+    turnout22:b,nbloc22:m.nbloc22,cbloc22:m.cbloc22,arab22:m.arab22,idx:m.idx_end!=null?m.idx_end:ix(H),idx_tod:m.idx_tod!=null?m.idx_tod:null,rep_time:m.rep_time||null,idx_prev:ix(P)};});}});
 
 dash.calc('camps',{inputs:['mob'],title:'Tempo-Index je Lager',description:'Index je Lager, gewichtet: Σ(Berecht.×Index×Beteiligung 2022) ÷ Σ(Berecht.×Beteiligung 2022).',
- fn:(mob)=>{const by={};mob.forEach(m=>{if(m.idx==null)return;const b=by[m.camp]=by[m.camp]||{a:0,b:0,n:0,e:0,ap:0,bp:0};
-  b.a+=m.eligible*m.idx*m.turnout22;b.b+=m.eligible*m.turnout22;b.n++;b.e+=m.eligible;if(m.idx_prev!=null){b.ap+=m.eligible*m.idx_prev*m.turnout22;b.bp+=m.eligible*m.turnout22;}});
-  return ['rechts','haredi','mitte-links','raam','joint','swing'].map(k=>{const b=by[k];return b?{camp:k,idx:Math.round(b.a/b.b*100)/100,n:b.n,eligible:b.e,idx_prev:b.bp?Math.round(b.ap/b.bp*100)/100:null}:{camp:k,idx:null,n:0,eligible:0,idx_prev:null};});}});
+ fn:(mob)=>{const by={};mob.forEach(m=>{if(m.idx==null)return;const b=by[m.camp]=by[m.camp]||{a:0,b:0,t:0,tb:0,n:0,e:0,ap:0,bp:0};const w=m.eligible*m.turnout22;
+  b.a+=w*m.idx;b.b+=w;if(m.idx_tod!=null){b.t+=w*m.idx_tod;b.tb+=w;}b.n++;b.e+=m.eligible;if(m.idx_prev!=null){b.ap+=w*m.idx_prev;b.bp+=w;}});
+  const R=v=>Math.round(v*100)/100;
+  return ['rechts','haredi','mitte-links','raam','joint','swing'].map(k=>{const b=by[k];return b?{camp:k,idx:R(b.a/b.b),idx_tod:b.tb?R(b.t/b.tb):null,n:b.n,eligible:b.e,idx_prev:b.bp?R(b.ap/b.bp):null}:{camp:k,idx:null,idx_tod:null,n:0,eligible:0,idx_prev:null};});}});
 
 dash.calc('seats',{inputs:['polls','camps'],title:'Sitze je Szenario',description:"Umfrageschnitt; Stimmanteile mit Lager-Index gewichtet (0, ½, voll); Hürde 3,25 %; D'Hondt auf 120 Sitze.",
- fn:(polls,camps)=>{const ci={};camps.forEach(c=>{ci[c.camp]=c.idx==null?1:Number(c.idx);});
+ fn:(polls,camps)=>{const mk=f=>{const o={};camps.forEach(c=>{o[c.camp]=c[f]==null?1:Number(c[f]);});return o;};const CE=mk('idx'),CT=mk('idx_tod');let ci=CE;
   const g=k=>({shas:((ci.rechts||1)+(ci.haredi||1))/2,yb:((ci.rechts||1)+(ci['mitte-links']||1))/2,mix:((ci.rechts||1)+(ci['mitte-links']||1))/2})[k]||ci[k]||1;
   const avg=(r,p)=>{const v=['kan','c12','c13'].map(s=>r[p+s]).filter(x=>x!==null&&x!==undefined&&x!=='').map(Number);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;};
   const OTHER=1.2;const smallTot=polls.filter(r=>avg(r,'pct_')!=null).reduce((s,r)=>s+avg(r,'pct_'),0);
   const base=polls.map(r=>({party:r.party,bloc:r.bloc,idx:Math.round(g(r.camp)*100)/100,sh:avg(r,'pct_')!=null?avg(r,'pct_'):avg(r,'seats_')/120*(100-smallTot-OTHER)}));
   const run=d=>{const sh=base.map(b=>b.sh*(1+d*(b.idx-1)));const tot=sh.reduce((a,b)=>a+b,0)+OTHER;const pct=sh.map(s=>s/tot*100);const seats=pct.map(()=>0);
    for(let i=0;i<120;i++){let bi=-1,bv=-1;pct.forEach((p,j)=>{if(p>=3.25){const q=p/(seats[j]+1);if(q>bv){bv=q;bi=j;}}});seats[bi]++;}return {pct,seats};};
-  const a=run(0),b=run(.5),c=run(1);
-  return base.map((r,j)=>({party:r.party,bloc:r.bloc,idx:r.idx,share_poll:Math.round(a.pct[j]*10)/10,seats_poll:a.seats[j],share_m50:Math.round(b.pct[j]*10)/10,seats_m50:b.seats[j],share_m100:Math.round(c.pct[j]*10)/10,seats_m100:c.seats[j]}));}});
+  const a=run(0),b=run(.5),c=run(1);const idxE=base.map(x=>x.idx);
+  ci=CT;base.forEach(x=>{x.idx=Math.round(g(polls.find(p=>p.party===x.party).camp)*100)/100;});const bt=run(.5),ct=run(1);
+  const R1=v=>Math.round(v*10)/10;
+  return base.map((r,j)=>({party:r.party,bloc:r.bloc,idx:idxE[j],idx_tod:r.idx,share_poll:R1(a.pct[j]),seats_poll:a.seats[j],share_m50:R1(b.pct[j]),seats_m50:b.seats[j],share_m100:R1(c.pct[j]),seats_m100:c.seats[j],
+   share_m50_tod:R1(bt.pct[j]),seats_m50_tod:bt.seats[j],share_m100_tod:R1(ct.pct[j]),seats_m100_tod:ct.seats[j]}));}});
 
 dash.calc('coal',{inputs:['seats'],title:'Mögliche Mehrheiten',description:'Summe der Sitze je Bündnis-Option und Szenario; 61 = Mehrheit.',
  fn:(seats)=>{const S=(names,col)=>seats.filter(s=>names.some(n=>s.party.startsWith(n))).reduce((a,s)=>a+s[col],0);
   const NB=['Likud','Otzma','Religiöser','Shas','UTJ','Am Yisrael','Haredi Public'],WB=['Yashar','Beyachad','Demokraten','Yisrael Beytenu'];
   return [['NB',NB],['NB+R',NB.concat(['Reservisten'])],['WB',WB],['WB+R',WB.concat(['Reservisten'])],['WB+R+RA',WB.concat(['Reservisten',"Ra'am"])],['WB+R+RA+J',WB.concat(['Reservisten',"Ra'am",'Joint'])],['U',['Likud','Yashar','Beyachad']]]
-   .map(([name,m])=>({name,poll:S(m,'seats_poll'),m50:S(m,'seats_m50'),m100:S(m,'seats_m100')}));}});
+   .map(([name,m])=>({name,poll:S(m,'seats_poll'),m50:S(m,'seats_m50'),m100:S(m,'seats_m100'),m50_tod:S(m,'seats_m50_tod'),m100_tod:S(m,'seats_m100_tod')}));}});
 
 let lang='de';
 const T=k=>{const v=window.IL_T[lang][k];return v===undefined?window.IL_T.de[k]:v;};
@@ -389,7 +394,9 @@ const num=(v,d)=>{const s=v.toFixed(d);return T('dec')===','?s.replace('.',','):
 const pc=v=>v==null?'—':num(Number(v),1)+(lang==='de'?' %':'%');const ix=v=>v==null?'—':num(Number(v),2);const pp=v=>v==null?'—':num(Number(v),1);
 const fk=v=>v==null?'—':Number(v).toLocaleString(lang==='de'?'de-DE':lang==='he'?'he-IL':'en-US');
 const nm=m=>lang==='he'&&m.name_he?m.name_he:m.name;
-let scen='m50';let sortKey='eligible',sortDir=-1;
+let scen='m50';let basis='tod';
+const V=id=>{const d=dash.data(id);if(basis!=='tod'||d.status!=='ok')return d;const sw=r=>{const o={...r};
+ if('idx_tod' in r)o.idx=r.idx_tod;['m50','m100'].forEach(k=>{if(('seats_'+k+'_tod') in r){o['seats_'+k]=r['seats_'+k+'_tod'];o['share_'+k]=r['share_'+k+'_tod'];}if((k+'_tod') in r)o[k]=r[k+'_tod'];});return o;};return {...d,data:d.data.map(sw)};};let sortKey='eligible',sortDir=-1;
 let socEl=25;
 const FAM=['likud','shas','utj','rz','yb','center','left','arab','other'];
 const FAMC={likud:'#0038b8',shas:'#111111',utj:'#4a4a4a',rz:'#c48a1d',yb:'#6a4fb3',center:'#4bb3e6',left:'#e0457b',arab:'#2e9e5b',other:'#c8ced6'};
@@ -460,7 +467,7 @@ function tipAt(tip,card,ev,lines){const t=tip.node();t.replaceChildren();t.setAt
 
 // ---------- draw ----------
 function drawAll(){
- const L=dash.data('latest'),M=dash.data('mob'),C=dash.data('camps'),MU=dash.data('muni'),N=dash.data('national');
+ const L=dash.data('latest'),M=V('mob'),C=V('camps'),MU=dash.data('muni'),N=dash.data('national');
  const tk=document.getElementById('takeaway');
  if(L.status==='ok'&&L.data.length){const l=L.data[0];document.getElementById('stamp').textContent=l.hour+':00 '+T('tz');const F=dash.data('fresh');if(F.status==='ok'&&F.data.length&&F.data[0].loc_time)document.getElementById('locTime').textContent=F.data[0].loc_time+' '+T('tz');document.getElementById('natNow').textContent=pc(l.y2026);
   document.getElementById('natThen').textContent=pc(l.y2022);const d=document.getElementById('natDelta');d.textContent=(l.delta>0?'+':'')+pp(l.delta)+' '+T('pts');d.className=l.delta>=0?'il-up':'il-down';}
@@ -470,17 +477,17 @@ function drawAll(){
   const cs=C.data.filter(c=>c.idx!=null&&c.camp!=='swing');if(cs.length){const hi=cs.reduce((a,b)=>b.idx>a.idx?b:a),lo=cs.reduce((a,b)=>b.idx<a.idx?b:a);
    tk.textContent=T('takeaway')(CN(hi.camp),CN(lo.camp));tk.classList.remove('dash-skeleton');}
  } else if(C.status==='error')tk.classList.remove('dash-skeleton');
- drawDay(N);drawSec(dash.data('sectors'));drawSoc();
+ drawDay(N);drawSec(V('sectors'));drawSoc();
  if(N.status==='ok'){const e=N.data.find(r=>Number(r.hour)===22);if(e&&e.est!=null){document.getElementById('natEst').textContent=pc(e.est);document.getElementById('natLo').textContent=pp(e.lo);document.getElementById('natHi').textContent=pc(e.hi);}}
  if(M.status==='ok'){const by=new Map(M.data.map(m=>[m.code,m]));const col=d3.scaleLinear([0.8,1,1.2],['#d64545','#f2f2f2','#1e9e5a']).clamp(true);
   drawMap('map1',c=>{const m=by.get(c);return m&&m.idx!=null?col(m.idx):null;},c=>{const m=by.get(c);if(!m)return null;
-   return [nm(m),`${T('now')} (${m.hour}:00 ${T('tz')}): ${pc(m.t_now)}`,`${T('end22')}: ${pc(m.turnout22)}`,`${T('idx')}: ${ix(m.idx)}`,`${T('camp')}: ${CN(m.camp)}`,`${T('upd')}: ${m.updated?m.updated+' '+T('tz'):'—'}`];});}
+   return [nm(m),`${T('now')} (${m.hour}:00 ${T('tz')}): ${pc(m.t_now)}`,`${T('end22')}: ${pc(m.turnout22)}`,`${T('idx')}: ${ix(m.idx)}`,`${T('camp')}: ${CN(m.camp)}`,`${T('upd')}: ${m.rep_time?m.rep_time+' '+T('tz'):(m.updated?m.updated+' '+T('tz'):'—')}`];});}
  if(MU.status==='ok'){const by=new Map(MU.data.map(m=>[m.code,m]));
   drawMap('map2',c=>{const m=by.get(c);if(!m||!CAMPC[m.camp])return null;const mg=m.camp==='raam'||m.camp==='joint'?m.arab22-50:m.camp==='haredi'?40:Math.abs(m.nbloc22-m.cbloc22);
    return d3.interpolateRgb('#ffffff',CAMPC[m.camp])(Math.min(1,.35+mg/60));},
    c=>{const m=by.get(c);if(!m)return null;return [nm(m),CN(m.camp),`${T('nb22')}: ${pc(m.nbloc22)}`,`${T('cb22')}: ${pc(m.cbloc22)}`,`${T('ar22')}: ${pc(m.arab22)}`,`${T('to22')}: ${pc(m.turnout22)}`];});
   const lg=document.getElementById('leg2');lg.replaceChildren();Object.keys(CAMPC).forEach(k=>{const s=document.createElement('span');const i=document.createElement('i');i.style.background=CAMPC[k];s.appendChild(i);s.appendChild(document.createTextNode(CN(k)));lg.appendChild(s);});}
- drawTable();drawPerf(dash.data('seats'));drawCamps(C);drawSeats(dash.data('seats'));drawCoal(dash.data('coal'));}
+ drawTable();drawPerf(V('seats'));drawCamps(C);drawSeats(V('seats'));drawCoal(V('coal'));}
 dash.onData(drawAll);
 
 function drawDay(N){const svg=d3.select('#day');svg.selectAll('*').remove();if(N.status!=='ok')return;const card=document.getElementById('dayCard');const W=Math.max(260,card.clientWidth-48),H=180,m={l:30,r:12,t:10,b:22};
@@ -504,7 +511,7 @@ function drawSec(SD){const svg=d3.select('#sec');svg.selectAll('*').remove();if(
    .on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('now')} (${r.hour}:00 ${T('tz')}): ${pc(r.t_now)}`,`${T('end22')}: ${pc(r.turnout22)}`,`${T('est')}: ${pc(r.est)} (${pp(r.lo)}–${pc(r.hi)})`,T('rep')(fk(r.stations),fk(r.stations_total))])).on('mouseleave',()=>tip.style('opacity',0));
   svg.append('text').attr('x',r.idx>=1?x(v)+4:x(v)-4).attr('text-anchor',r.idx>=1?'start':'end').attr('y',y+13).attr('font-size',10.5).attr('font-weight',600).attr('fill',c).text(ix(r.idx));});}
 
-function drawSoc(){const svg=d3.select('#soc');svg.selectAll('*').remove();const SO=dash.data('society'),SD=dash.data('sectors');const leg=document.getElementById('famLeg');leg.replaceChildren();if(SO.status!=='ok')return;
+function drawSoc(){const svg=d3.select('#soc');svg.selectAll('*').remove();const SO=dash.data('society'),SD=V('sectors');const leg=document.getElementById('famLeg');leg.replaceChildren();if(SO.status!=='ok')return;
  const card=document.getElementById('socCard'),tip=d3.select('#tip5');const W=Math.max(300,card.clientWidth-48);const SL=T('sectors'),FL=T('fam');
  const cur=SO.data.filter(r=>Number(r.election)===socEl);const ref=SO.data.filter(r=>Number(r.election)===25);const now=SD.status==='ok'?SD.data:[];
  const order=[...ref].sort((a,b)=>b.eligible-a.eligible).map(r=>r.sector);
@@ -557,7 +564,7 @@ function drawGauges(C){document.querySelectorAll('.il-gauge').forEach(g=>{const 
  sv.append('rect').attr('x',Math.min(50,x(r.idx))).attr('y',2).attr('width',Math.max(1,Math.abs(x(r.idx)-50))).attr('height',6).attr('rx',2).attr('fill',r.idx>=1.03?'#1e9e5a':r.idx<=0.97?'#d64545':'#9aa5b1');
  sv.append('line').attr('x1',50).attr('x2',50).attr('y1',0).attr('y2',10).attr('stroke','var(--color-fg-muted)').attr('stroke-width',1).attr('vector-effect','non-scaling-stroke');});}
 
-function drawTable(){const M=dash.data('mob');const tb=document.querySelector('#tbl tbody');tb.replaceChildren();if(M.status!=='ok')return;
+function drawTable(){const M=V('mob');const tb=document.querySelector('#tbl tbody');tb.replaceChildren();if(M.status!=='ok')return;
  const q=(document.getElementById('q').value||'').trim().toLowerCase(),small=document.getElementById('small').checked;
  const rows=M.data.filter(r=>(small||r.eligible>=20000)&&(!q||(r.name||'').toLowerCase().includes(q)||(r.name_he||'').includes(q)))
   .sort((a,b)=>{const x=sortKey==='name'?nm(a):a[sortKey],y=sortKey==='name'?nm(b):b[sortKey];if(x==null)return 1;if(y==null)return -1;return typeof x==='string'?sortDir*x.localeCompare(y):sortDir*(x-y);});
@@ -568,7 +575,8 @@ function drawTable(){const M=dash.data('mob');const tb=document.querySelector('#
 document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{const f=th.getAttribute('data-field');sortDir=sortKey===f?-sortDir:(f==='name'||f==='camp_label'?1:-1);sortKey=f;
  document.querySelectorAll('#tbl th').forEach(h=>h.removeAttribute('aria-sort'));th.setAttribute('aria-sort',sortDir>0?'ascending':'descending');drawTable();}));
 document.getElementById('q').addEventListener('input',drawTable);document.getElementById('small').addEventListener('change',drawTable);
-document.querySelectorAll('#scen button').forEach(b=>b.addEventListener('click',()=>{scen=b.dataset.s;document.querySelectorAll('#scen button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawSeats(dash.data('seats'));drawPerf(dash.data('seats'));drawCoal(dash.data('coal'));}));
+document.querySelectorAll('#basisSeg button').forEach(b=>b.addEventListener('click',()=>{basis=b.dataset.b;document.querySelectorAll('#basisSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawAll();}));
+document.querySelectorAll('#scen button').forEach(b=>b.addEventListener('click',()=>{scen=b.dataset.s;document.querySelectorAll('#scen button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawSeats(V('seats'));drawPerf(V('seats'));drawCoal(V('coal'));}));
 
 function drawSeats(SE){const svg=d3.select('#hemi');svg.selectAll('*').remove();const pl=document.getElementById('plist');pl.replaceChildren();if(SE.status!=='ok')return;
  const col='seats_'+scen,sh='share_'+scen;const order=['Wechsel','Arabisch','Offen','Netanjahu'];

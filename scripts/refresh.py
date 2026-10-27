@@ -189,6 +189,66 @@ if "--geo" in sys.argv:
     json.dump(shapes, open(os.path.join(OUT, "shapes.json"), "w"), ensure_ascii=False, separators=(",", ":"))
     print("shapes", len(shapes), os.path.getsize(os.path.join(OUT, "shapes.json")))
 
+
+# ---------- Tagesprofile 2022 (Anteil der Endbeteiligung, der zur Stunde erreicht war) ----------
+# national: CEC; arabisch: 12 h ~12 % (Hadash-Ta'al), 16 h ~23 % (Accord-Zentrum, HU), 18 h ~30 % (JPost); Ende 53,2 % (IDI).
+# Jüdisch: aus national und arabisch zurückgerechnet (Anteil arabischer Wahlberechtigter ~16 %). 14/20 h arabisch interpoliert.
+NAT22H = {10: 15.9, 12: 28.4, 14: 38.9, 16: 47.5, 18: 57.7, 20: 66.3}
+AR22H = {12: 12.0, 14: 17.5, 16: 23.0, 18: 30.0, 20: 41.6}
+AR_SRC = {12: "Hadash-Ta'al", 14: "interpoliert", 16: "Accord (HU)", 18: "JPost", 20: "interpoliert"}
+AR22F, WA = 53.2, 0.16
+JE22F = (NAT22 - WA * AR22F) / (1 - WA)
+prof = []
+for h, n in NAT22H.items():
+    prof.append(dict(group="national", hour=h, same22=n, final22=NAT22, share=round(n / NAT22, 4), source="CEC"))
+    if h in AR22H:
+        a = AR22H[h]; j = (n - WA * a) / (1 - WA)
+        prof.append(dict(group="arab", hour=h, same22=a, final22=AR22F, share=round(a / AR22F, 4), source=AR_SRC[h]))
+        prof.append(dict(group="jewish", hour=h, same22=round(j, 1), final22=round(JE22F, 1), share=round(j / JE22F, 4), source="abgeleitet"))
+json.dump(prof, open(os.path.join(OUT, "profiles.json"), "w"), ensure_ascii=False)
+PROF = {(p["group"], p["hour"]): p["share"] for p in prof}
+
+# ---------- Zeitbereinigte Indizes je Stimmbezirk (Meldezeit jeder Urne berücksichtigt) ----------
+def _hm(s):
+    try:
+        h, m = s.split(":"); return int(h) + int(m) / 60
+    except Exception:
+        return None
+def _interp(pts, t):
+    pts = sorted(pts)
+    if t <= pts[0][0]: return pts[0][1]
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        if t <= x1: return y0 + (y1 - y0) * (t - x0) / (x1 - x0)
+    return pts[-1][1]
+N22 = [(7, 0.0)] + sorted(NAT22H.items()) + [(22, NAT22)]
+_n26 = {int(h): float(v) for h, v in hist["national"].items() if v is not None and int(h) < 22}
+N26 = [(7, 0.0)] + sorted(_n26.items())
+_last = max(_n26)
+def nat26_at(t):
+    if t <= _last: return _interp(N26, t)
+    return _n26[_last] * _interp(N22, t) / _interp(N22, _last)
+AR = [(7, 0.0)] + sorted((h, v / AR22F) for h, v in AR22H.items()) + [(22, 1.0)]
+def prof_at(g, t):
+    n = _interp(N22, t) / NAT22
+    if g == "national": return n
+    a = _interp(AR, t)
+    if g == "arab": return a
+    return (n * NAT22 - WA * a * AR22F) / ((1 - WA) * JE22F)
+def tod_idx(stations, final22, g):
+    """stations: list of (eligible, pct, updated). Liefert (idx_ende, idx_uhrzeit, mittlere Meldezeit)."""
+    num = den_e = den_t = w = tw = 0.0
+    for E, pct, up in stations:
+        t = _hm(up or "")
+        if t is None or not E or pct is None: continue
+        n26 = nat26_at(t); n22 = _interp(N22, t)
+        if n26 <= 0 or n22 <= 0: continue
+        num += E * pct
+        den_e += E * final22 * n26 / NAT22
+        den_t += E * final22 * prof_at(g, t) * n26 / n22
+        w += E; tw += E * t
+    if not w or not den_e: return None, None, None
+    mt = tw / w
+    return round(num / den_e, 2), round(num / den_t, 2), "%02d:%02d" % (int(mt), round((mt % 1) * 60) % 60)
 # ---------- sectors (station level, votes26.com assignment) ----------
 SEC_DE = {"right":"Rechte Hochburgen","left":"Mitte-links-Hochburgen","secular":"Säkular","national_religious":"National-religiös",
  "judea_samaria":"Judäa & Samaria","haredi":"Haredi","arab":"Arabisch","druze":"Drusisch","fsu":"Ex-UdSSR-Einwanderer",
@@ -205,16 +265,19 @@ def clampf(v, lo, hi):
 sec_rows = []
 for sid, s in secdef["sectors"].items():
     E = V = n = tot = 0
+    _st = []
     for loc, sts in s["k26_by_loc"].items():
         for st in sts:
             tot += 1; f = kal.get(f"{loc}|{st}")
-            if f: E += f["בזב"]; V += f["מצביעים"]; n += 1
+            if f: E += f["בזב"]; V += f["מצביעים"]; n += 1; _st.append((f["בזב"], f.get("percent"), f.get("updated")))
     t22 = s["by_election"]["25"]["turnout"] * 100
+    _g = "arab" if sid in ("arab", "bedouin_north", "bedouin_south", "christian", "druze") else "jewish"
+    _ie, _it, _mt = tod_idx(_st, t22, _g)
     sh = s["by_election"]["25"]["share"]
     now = V / E * 100 if E else None
-    j = (now / t22) / (nat_now / NAT22) if now else None
+    j = _ie
     sec_rows.append(dict(sector=sid, label=SEC_DE.get(sid, sid), hour=HOUR, stations=n, stations_total=tot, eligible=E,
-        t_now=round(now, 1) if now else None, turnout22=round(t22, 1), idx=round(j, 2) if j else None,
+        t_now=round(now, 1) if now else None, turnout22=round(t22, 1), idx=_ie, idx_tod=_it, rep_time=_mt, profile=_g,
         est=clampf(t22 * j * NEST["est"] / NAT22, now, 100) if j and NEST else None,
         lo=clampf(t22 * j * NEST["lo"] / NAT22 - 1.5, now, clampf(t22 * j * NEST["est"] / NAT22, now, 100)) if j and NEST else None,
         hi=clampf(t22 * j * NEST["hi"] / NAT22 + 1.5, clampf(t22 * j * NEST["est"] / NAT22, now, 100), 100) if j and NEST else None,
@@ -231,3 +294,16 @@ for sid, sdef in secdef["sectors"].items():
         soc.append(r)
 json.dump(soc, open(os.path.join(OUT, "society.json"), "w"), ensure_ascii=False)
 print("national est", NEST, "society rows", len(soc))
+
+# ---------- Orte: zeitbereinigte Indizes aus den Stimmbezirken ----------
+_by = {}
+for key, f in kal.items():
+    _by.setdefault(int(f.get("code") or key.split("|")[0]), []).append((f["בזב"], f.get("percent"), f.get("updated")))
+for row in muni:
+    s22 = R22.get(row["code"])
+    if not s22 or row["code"] not in _by: continue
+    g = "arab" if row.get("camp") in ("raam", "joint") else "jewish"
+    ie, it, mt = tod_idx(_by[row["code"]], s22["turnout22"], g)
+    row.update(idx_end=ie, idx_tod=it, rep_time=mt, profile=g)
+json.dump(muni, open(os.path.join(OUT, "muni.json"), "w"), ensure_ascii=False)
+print("tod", [(m["name"], m.get("idx_end"), m.get("idx_tod")) for m in muni if m["code"] in (5000, 3000, 6100, 1161, 7300, 7400)])
