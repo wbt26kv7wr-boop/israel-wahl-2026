@@ -191,11 +191,11 @@ if "--geo" in sys.argv:
 
 
 # ---------- Tagesprofile 2022 (Anteil der Endbeteiligung, der zur Stunde erreicht war) ----------
-# national: CEC; arabisch: 12 h ~12 % (Hadash-Ta'al), 16 h ~23 % (Accord-Zentrum, HU), 18 h ~30 % (JPost); Ende 53,2 % (IDI).
-# Jüdisch: aus national und arabisch zurückgerechnet (Anteil arabischer Wahlberechtigter ~16 %). 14/20 h arabisch interpoliert.
+# national: CEC; arabisch: 12 h ~12 % (Hadash-Ta'al), 14/16/18/20 h 17/23/30/44 % (aChord-Zentrum, Hebräische Univ., Modell + Stichprobe); Ende 53,2 % (IDI).
+# Jüdisch: aus national und arabisch zurückgerechnet (Anteil arabischer Wahlberechtigter ~16 %).
 NAT22H = {10: 15.9, 12: 28.4, 14: 38.9, 16: 47.5, 18: 57.7, 20: 66.3}
-AR22H = {12: 12.0, 14: 17.5, 16: 23.0, 18: 30.0, 20: 41.6}
-AR_SRC = {12: "Hadash-Ta'al", 14: "interpoliert", 16: "Accord (HU)", 18: "JPost", 20: "interpoliert"}
+AR22H = {12: 12.0, 14: 17.0, 16: 23.0, 18: 30.0, 20: 44.0}
+AR_SRC = {12: "Hadash-Ta'al", 14: "aChord (HU)", 16: "aChord (HU)", 18: "aChord (HU)", 20: "aChord (HU)"}
 AR22F, WA = 53.2, 0.16
 JE22F = (NAT22 - WA * AR22F) / (1 - WA)
 prof = []
