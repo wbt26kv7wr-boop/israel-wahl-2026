@@ -1,9 +1,9 @@
 name: Daten aktualisieren
 
+# Die Server der Wahlkommission sperren Abrufe von GitHub-Rechnern (HTTP 403).
+# Die Daten werden deshalb von außen per Push aktualisiert; dieser Workflow ist nur manuell startbar.
 on:
-  schedule:
-    - cron: "*/10 5-21 * * *"   # alle 10 Minuten, 07–23 Uhr Israel (UTC-Zeiten)
-  workflow_dispatch: {}          # manuell startbar unter "Actions"
+  workflow_dispatch: {}
 
 permissions:
   contents: write
