@@ -1,0 +1,156 @@
+[
+{
+"party": "Yashar (Eisenkot)",
+"bloc": "Wechsel",
+"camp": "mitte-links",
+"seats_kan": 22,
+"seats_c12": 23,
+"seats_c13": 22,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Likud (Netanjahu)",
+"bloc": "Netanjahu",
+"camp": "rechts",
+"seats_kan": 20,
+"seats_c12": 21,
+"seats_c13": 19,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Beyachad (Bennett)",
+"bloc": "Wechsel",
+"camp": "mitte-links",
+"seats_kan": 14,
+"seats_c12": 15,
+"seats_c13": 14,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Demokraten (Golan)",
+"bloc": "Wechsel",
+"camp": "mitte-links",
+"seats_kan": 8,
+"seats_c12": 10,
+"seats_c13": 10,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Joint List",
+"bloc": "Arabisch",
+"camp": "joint",
+"seats_kan": 9,
+"seats_c12": 9,
+"seats_c13": 9,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Yisrael Beytenu (Liberman)",
+"bloc": "Wechsel",
+"camp": "yb",
+"seats_kan": 8,
+"seats_c12": 8,
+"seats_c13": 8,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Otzma Yehudit (Ben-Gvir)",
+"bloc": "Netanjahu",
+"camp": "rechts",
+"seats_kan": 8,
+"seats_c12": 8,
+"seats_c13": 8,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "UTJ",
+"bloc": "Netanjahu",
+"camp": "haredi",
+"seats_kan": 8,
+"seats_c12": 7,
+"seats_c13": 8,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Shas (Deri)",
+"bloc": "Netanjahu",
+"camp": "shas",
+"seats_kan": 7,
+"seats_c12": 8,
+"seats_c13": 7,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Religiöser Zionismus (Smotrich)",
+"bloc": "Netanjahu",
+"camp": "rechts",
+"seats_kan": 7,
+"seats_c12": 6,
+"seats_c13": 8,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Ra'am (Abbas)",
+"bloc": "Arabisch",
+"camp": "raam",
+"seats_kan": 5,
+"seats_c12": 5,
+"seats_c13": 7,
+"pct_kan": null,
+"pct_c12": null,
+"pct_c13": null
+},
+{
+"party": "Reservisten (Hendel)",
+"bloc": "Offen",
+"camp": "mix",
+"seats_kan": 4,
+"seats_c12": 0,
+"seats_c13": 0,
+"pct_kan": 3.4,
+"pct_c12": 2.4,
+"pct_c13": 3.0
+},
+{
+"party": "Am Yisrael (Winter)",
+"bloc": "Netanjahu",
+"camp": "rechts",
+"seats_kan": 0,
+"seats_c12": 0,
+"seats_c13": 0,
+"pct_kan": 2.9,
+"pct_c12": 2.5,
+"pct_c13": 3.1
+},
+{
+"party": "Haredi Public (Leitner)",
+"bloc": "Netanjahu",
+"camp": "haredi",
+"seats_kan": 0,
+"seats_c12": 0,
+"seats_c13": 0,
+"pct_kan": 0.7,
+"pct_c12": 0.5,
+"pct_c13": 1.3
+}
+]

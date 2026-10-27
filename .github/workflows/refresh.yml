@@ -1,0 +1,32 @@
+name: Daten aktualisieren
+
+on:
+  schedule:
+    - cron: "*/10 5-21 * * *"   # alle 10 Minuten, 07–23 Uhr Israel (UTC-Zeiten)
+  workflow_dispatch: {}          # manuell startbar unter "Actions"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Live-Daten der Wahlkommission holen
+        run: python3 scripts/refresh.py
+      - name: Änderungen speichern
+        run: |
+          git config user.name "dashboard-bot"
+          git config user.email "dashboard-bot@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then echo "keine neuen Daten"; exit 0; fi
+          git commit -m "Daten aktualisiert $(date -u +%H:%M) UTC"
+          git push

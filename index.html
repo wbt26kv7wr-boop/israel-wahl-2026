@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Israel-Wahl 2026 · Mobilisierung</title>
+<meta name="description" content="Live-Analyse der Wahlbeteiligung bei der Knesset-Wahl 2026 nach Orten, Lagern und Sektoren.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600&family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+:root{--color-fg:#16202e;--color-fg-muted:#5b6676;--color-bg:#f5f7fb;--color-panel:#ffffff;--color-border-line:#e1e6ee;
+--cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:14px;--cds-gap-lg:22px;--cds-gap-xl:32px;--cds-pad-xs:4px;--cds-pad-sm:8px;--cds-pad-md:12px;--cds-pad-lg:18px;
+--cds-radius:10px;--cds-font-size-caption:12.5px;--cds-font-size-body:14.5px;--cds-font-size-heading:16px;--cds-font-size-title:30px;--cds-font-weight-medium:600;
+--cds-surface-popover:#ffffff;--cds-border:#d5dce6;--cds-shadow-popover:0 6px 24px rgba(16,32,64,.14);--cds-chart-grid:#e8ecf2;--cds-chart-reference:#9aa5b1;--cds-dur-slow:.4s;
+--font-anthropic-sans:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;--font-anthropic-serif:"Frank Ruhl Libre",Georgia,serif}
+@media (prefers-color-scheme:dark){:root{--color-fg:#e8edf5;--color-fg-muted:#9aa6b8;--color-bg:#0d1420;--color-panel:#141d2b;--color-border-line:#26324a;--cds-surface-popover:#1b2638;--cds-border:#33415c;--cds-chart-grid:#233046;--cds-chart-reference:#6c7a90;--cds-shadow-popover:0 6px 24px rgba(0,0,0,.5)}}
+html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:var(--cds-font-size-body)}
+#dash-root{max-width:1280px;margin:0 auto;padding:20px 16px 40px}
+.dash-skeleton{color:transparent;background:linear-gradient(90deg,var(--color-border-line),transparent);border-radius:6px;min-height:1em}
+.il-foot{margin-top:28px;font-size:12px;color:var(--color-fg-muted);line-height:1.6;border-top:1px solid var(--color-border-line);padding-top:14px}
+.il-foot a{color:inherit}
+</style>
+<script>
+/* Minimal-Ersatz für die Dashboard-API: lädt data/<id>.json und rechnet die Kennzahlen im Browser. */
+(function(){
+ const IDS=['muni','turnout','national','polls','shapes','sectors','society','background'];
+ const store={},calcs=[],subs=[];
+ IDS.forEach(id=>store[id]={status:'loading',data:[]});
+ function runCalcs(){calcs.forEach(c=>{const ins=c.inputs.map(i=>store[i]);if(ins.every(x=>x&&x.status==='ok')){try{store[c.id]={status:'ok',data:c.fn(...ins.map(x=>x.data))};}catch(e){console.error(c.id,e);store[c.id]={status:'error',data:[]};}}
+  else if(ins.some(x=>x&&x.status==='error'))store[c.id]={status:'error',data:[]};else store[c.id]={status:'loading',data:[]};});}
+ function emit(){runCalcs();subs.forEach(f=>{try{f();}catch(e){console.error(e);}});}
+ window.dash={data:id=>store[id]||{status:'missing',data:[]},calc:(id,o)=>{calcs.push({id,inputs:o.inputs,fn:o.fn});store[id]={status:'loading',data:[]};},
+  onData:fn=>{subs.push(fn);try{fn();}catch(e){console.error(e);}},loader:()=>{},colors:[],refresh:()=>load(),params:()=>({}),setParams:()=>{},resetParams:()=>{},setLink:()=>{}};
+ function load(){const v=Date.now();Promise.all(IDS.map(id=>fetch('data/'+id+'.json?v='+v).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
+  .then(d=>{store[id]={status:'ok',data:d};}).catch(()=>{store[id]={status:'error',data:[]};}))).then(emit);
+  fetch('data/status.json?v='+v).then(r=>r.json()).then(s=>{const el=document.getElementById('updAt');if(el&&s.generated)el.textContent=new Date(s.generated).toLocaleString();}).catch(()=>{});}
+ let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>subs.forEach(f=>f()),150);});
+ window.addEventListener('DOMContentLoaded',()=>{load();setInterval(load,5*60*1000);});
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+<style>
+#dash-root{--il:#0038b8;--il-soft:color-mix(in srgb,#0038b8 12%,transparent);--good:#1e9e5a;--bad:#d64545}
+.il{font-family:var(--font-anthropic-sans);display:flex;flex-direction:column;gap:var(--cds-gap-lg)}
+.il-flag{height:6px;background:linear-gradient(var(--il) 0 2px,transparent 2px 4px,var(--il) 4px 6px)}
+.il-top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--cds-gap-md);flex-wrap:wrap}
+.il-head h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:var(--cds-gap-sm) 0 0;color:var(--il)}
+.il-head p{margin:var(--cds-gap-xs) 0;color:var(--color-fg-muted)}
+.il-stamp{display:inline-block;font-size:var(--cds-font-size-caption);color:var(--il);background:var(--il-soft);border-radius:999px;padding:2px 10px;margin-top:var(--cds-gap-xs)}
+.il-grid{display:grid;gap:var(--cds-gap-md);grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))}
+.il-tiles{display:grid;gap:var(--cds-gap-md);grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr))}
+.il-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);position:relative;min-width:0}
+.il-tile{border-top:3px solid var(--il)}
+.il-card h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0 0 var(--cds-gap-xs);display:flex;align-items:center;gap:6px}
+.il-sec{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);color:var(--il);margin:var(--cds-gap-md) 0 0;display:flex;align-items:center;gap:6px}
+.il-note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0 0 var(--cds-gap-sm)}
+.il-lbl{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);display:flex;align-items:center;gap:4px}
+.il-big{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);font-variant-numeric:tabular-nums;margin-top:2px}
+.il-sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.il-gauge{display:block;margin-top:6px}
+.il-up{color:var(--good)}.il-down{color:var(--bad)}
+.ib{all:unset;cursor:help;width:16px;height:16px;border-radius:50%;border:1px solid var(--il);color:var(--il);font-size:10px;line-height:16px;text-align:center;font-weight:600;position:relative;flex:none;font-family:var(--font-anthropic-sans)}
+.ib::after{content:attr(data-tip);position:absolute;inset-inline-start:50%;top:22px;transform:translateX(-50%);width:max-content;max-width:16rem;white-space:normal;text-align:start;font-weight:400;font-size:var(--cds-font-size-caption);line-height:1.4;color:var(--color-fg);background:var(--cds-surface-popover);border:1px solid var(--cds-border);border-radius:var(--cds-radius);box-shadow:var(--cds-shadow-popover);padding:var(--cds-pad-xs) var(--cds-pad-sm);opacity:0;pointer-events:none;z-index:20;transition:opacity .15s}
+.il[dir=rtl] .ib::after{transform:translateX(50%)}
+.ib:hover::after,.ib:focus::after{opacity:1}
+.il svg{direction:ltr}
+.il-maps svg{width:100%;height:auto;max-height:560px;display:block;margin:0 auto}
+.il-legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:var(--cds-gap-sm)}
+.il-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:4px;vertical-align:-1px}
+.il-tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);border-radius:var(--cds-radius);box-shadow:var(--cds-shadow-popover);padding:var(--cds-pad-xs) var(--cds-pad-sm);font-size:var(--cds-font-size-caption);opacity:0;z-index:10;max-width:14rem}
+.il-tip b{color:var(--il)}
+.il-tw{max-height:28rem;overflow:auto}
+.il table{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
+.il th{position:sticky;top:0;background:var(--color-panel);text-align:end;font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted);padding:6px;border-bottom:1px solid var(--color-border-line);cursor:pointer;white-space:nowrap}
+.il th:first-child,.il td:first-child,.il th:nth-child(2),.il td:nth-child(2){text-align:start}
+.il td{padding:5px 6px;border-bottom:1px solid var(--color-border-line);text-align:end;white-space:nowrap}
+.il-pill{display:inline-block;border-radius:999px;padding:0 7px;font-size:11px;color:#fff}
+.il-seg{display:inline-flex;border:1px solid var(--il);border-radius:999px;overflow:hidden;margin-bottom:var(--cds-gap-sm)}
+.il-seg button{all:unset;cursor:pointer;padding:3px 10px;font-size:var(--cds-font-size-caption);color:var(--il)}
+.il-seg button[aria-pressed=true]{background:var(--il);color:#fff}
+.il-lang{margin:var(--cds-gap-sm) 0 0}
+.il-party{display:grid;grid-template-columns:12px 1fr auto auto;gap:4px 8px;align-items:center;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
+.il-party i{width:10px;height:10px;border-radius:2px}
+.il-ideas{display:grid;gap:var(--cds-gap-sm);grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr))}
+.il-idea{border-inline-start:3px solid var(--il);padding:4px 10px;font-size:var(--cds-font-size-caption)}
+.il-idea b{display:flex;gap:6px;align-items:center;font-size:var(--cds-font-size-body);margin-bottom:2px}
+.il-in{font:inherit;padding:3px 8px;border:1px solid var(--color-border-line);border-radius:999px;background:transparent;color:inherit}
+[data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+[data-dash-source-state=empty]{color:transparent}
+</style>
+
+<div class="il" id="il" dir="ltr" lang="de">
+  <div class="il-head">
+    <div class="il-flag"></div>
+    <div class="il-top">
+      <h1 id="top" data-t="title">Israel-Wahl 2026 · Mobilisierung</h1>
+      <div class="il-seg il-lang" role="group" aria-label="Sprache / Language / שפה">
+        <button data-lang="de" aria-pressed="true">DE</button><button data-lang="en" aria-pressed="false">EN</button><button data-lang="he" aria-pressed="false">עב</button>
+      </div>
+    </div>
+    <p id="takeaway" class="dash-skeleton">—</p>
+    <span class="il-stamp"><span data-t="asof">Stand</span> <span data-source="latest" data-field="hour" id="stamp">—</span> <span data-t="hourIL">Uhr (Israel) · Update alle 2 Std.</span></span>
+  </div>
+
+  <div class="il-tiles" id="tiles">
+    <div class="il-card il-tile">
+      <div class="il-lbl"><span data-t="natTurnout">Beteiligung landesweit</span> <button class="ib" data-tt="natTurnoutTip">i</button></div>
+      <div class="il-big" data-source="latest" data-field="y2026" id="natNow">—</div>
+      <div class="il-sub">2022: <span data-source="latest" data-field="y2022" id="natThen">—</span> · <span data-source="latest" data-field="delta" id="natDelta">—</span></div>
+    </div>
+    <div class="il-card il-tile">
+      <div class="il-lbl"><span data-t="projT">Prognose Endbeteiligung</span> <button class="ib" data-tt="projTip">i</button></div>
+      <div class="il-big" data-source="national" data-field="est" data-where="hour=22" id="natEst">—</div>
+      <div class="il-sub"><span data-t="range">Spanne</span> <span data-source="national" data-field="lo" data-where="hour=22" id="natLo">—</span>–<span data-source="national" data-field="hi" data-where="hour=22" id="natHi">—</span></div>
+    </div>
+    <div class="il-card il-tile"><div class="il-lbl"><span data-t="c_rechts">Rechts / Likud</span> <button class="ib" data-tt="tip_rechts">i</button></div><svg class="il-gauge" width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none"></svg><div class="il-big" data-source="camps" data-field="idx" data-where="camp=rechts">—</div><div class="il-sub"><span data-source="camps" data-field="n" data-where="camp=rechts">—</span> <span data-t="places">Orte</span></div></div>
+    <div class="il-card il-tile"><div class="il-lbl"><span data-t="c_haredi">Haredi</span> <button class="ib" data-tt="tip_haredi">i</button></div><svg class="il-gauge" width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none"></svg><div class="il-big" data-source="camps" data-field="idx" data-where="camp=haredi">—</div><div class="il-sub"><span data-source="camps" data-field="n" data-where="camp=haredi">—</span> <span data-t="places">Orte</span></div></div>
+    <div class="il-card il-tile"><div class="il-lbl"><span data-t="c_mitte-links">Mitte-links</span> <button class="ib" data-tt="tip_ml">i</button></div><svg class="il-gauge" width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none"></svg><div class="il-big" data-source="camps" data-field="idx" data-where="camp=mitte-links">—</div><div class="il-sub"><span data-source="camps" data-field="n" data-where="camp=mitte-links">—</span> <span data-t="places">Orte</span></div></div>
+    <div class="il-card il-tile"><div class="il-lbl"><span data-t="c_raam">Ra'am</span> <button class="ib" data-tt="tip_raam">i</button></div><svg class="il-gauge" width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none"></svg><div class="il-big" data-source="camps" data-field="idx" data-where="camp=raam">—</div><div class="il-sub"><span data-source="camps" data-field="n" data-where="camp=raam">—</span> <span data-t="places">Orte</span></div></div>
+    <div class="il-card il-tile"><div class="il-lbl"><span data-t="c_joint">Joint List</span> <button class="ib" data-tt="tip_joint">i</button></div><svg class="il-gauge" width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none"></svg><div class="il-big" data-source="camps" data-field="idx" data-where="camp=joint">—</div><div class="il-sub"><span data-source="camps" data-field="n" data-where="camp=joint">—</span> <span data-t="places">Orte</span></div></div>
+    <div class="il-card il-tile"><div class="il-lbl"><span data-t="c_swing">Swing</span> <button class="ib" data-tt="tip_swing">i</button></div><svg class="il-gauge" width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none"></svg><div class="il-big" data-source="camps" data-field="idx" data-where="camp=swing">—</div><div class="il-sub"><span data-source="camps" data-field="n" data-where="camp=swing">—</span> <span data-t="places">Orte</span></div></div>
+  </div>
+
+  <div class="il-grid">
+    <div class="il-card" id="dayCard" data-source="national">
+      <h2><span data-t="day">Tagesverlauf</span> <button class="ib" data-tt="dayTip">i</button></h2>
+      <p class="il-note" data-t="dayNote">Beteiligung in %, 2026 vs. 2022</p>
+      <svg id="day" width="100%" role="img" aria-label="day"></svg>
+      <div class="il-legend"><span><i style="background:#0038b8"></i>2026</span><span><i style="background:#9aa5b1"></i>2022</span></div>
+      <div class="il-tip" id="tip0"></div>
+    </div>
+    <div class="il-card" id="secCard" data-source="sectors">
+      <h2><span data-t="sec">Sektoren nach Stimmbezirk</span> <button class="ib" data-tt="secTip">i</button></h2>
+      <p class="il-note" data-t="secNote">Tempo-Index; Balken rechts = stärker als sonst</p>
+      <svg id="sec" width="100%" role="img" aria-label="sectors"></svg>
+      <div class="il-tip" id="tip4"></div>
+    </div>
+  </div>
+
+  <div class="il-card" id="socCard" data-source="society sectors">
+    <h2><span data-t="soc">Israels Gesellschaft nach Sektoren</span> <button class="ib" data-tt="socTip">i</button></h2>
+    <div class="il-seg" role="group" id="elSeg">
+      <button data-el="21" aria-pressed="false">04/2019</button><button data-el="22" aria-pressed="false">09/2019</button><button data-el="23" aria-pressed="false">2020</button><button data-el="24" aria-pressed="false">2021</button><button data-el="25" aria-pressed="true">2022</button>
+    </div>
+    <svg id="soc" width="100%" role="img" aria-label="society"></svg>
+    <div class="il-legend" id="famLeg"></div>
+    <div class="il-tip" id="tip5"></div>
+  </div>
+
+  <div class="il-sec" id="karten"><span data-t="maps">Karten</span> <button class="ib" data-tt="mapsTip">i</button></div>
+  <div class="il-grid il-maps">
+    <div class="il-card" id="map1card" data-source="mob shapes background">
+      <h2><span data-t="map1">Über- und Unterperformer</span> <button class="ib" data-tt="map1Tip">i</button></h2>
+      <p class="il-note" data-t="map1Note">Tempo gegenüber eigener Beteiligung 2022</p>
+      <svg id="map1" viewBox="0 0 300 640" role="img" aria-label="map"></svg>
+      <div class="il-legend"><span style="display:flex;align-items:center;gap:6px;direction:ltr">0,8 <span style="width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--bad),#f2f2f2,var(--good))"></span> 1,2</span></div>
+      <div class="il-tip" id="tip1"></div>
+    </div>
+    <div class="il-card" id="map2card" data-source="muni shapes background">
+      <h2><span data-t="map2">Hochburgen 2022</span> <button class="ib" data-tt="map2Tip">i</button></h2>
+      <p class="il-note" data-t="map2Note">Stärkstes Lager je Ort</p>
+      <svg id="map2" viewBox="0 0 300 640" role="img" aria-label="map"></svg>
+      <div class="il-legend" id="leg2"></div>
+      <div class="il-tip" id="tip2"></div>
+    </div>
+  </div>
+
+  <div class="il-card" id="ortstabelle">
+    <h2><span data-t="tbl">Orte im Detail</span> <button class="ib" data-tt="tblTip">i</button></h2>
+    <p class="il-note"><input id="q" class="il-in" type="search" data-tp="search"> <label style="margin-inline-start:8px"><input type="checkbox" id="small"> <span data-t="small">auch kleine Orte</span></label></p>
+    <div class="il-tw">
+      <table id="tbl" data-source="mob" data-row-key="code">
+        <thead><tr>
+          <th data-field="name" data-t="h_name">Ort</th><th data-field="camp_label" data-t="h_camp">Lager</th><th data-field="eligible" data-t="h_elig">Berecht.</th><th data-field="t10">10 h</th><th data-field="t_now" data-t="h_now">Aktuell</th><th data-field="turnout22" data-t="h_22">Ende 2022</th><th data-field="nbloc22" data-t="h_nb">N-Block 22</th><th data-field="cbloc22" data-t="h_cb">W-Block 22</th><th data-field="idx" data-t="h_idx">Tempo</th>
+        </tr></thead><tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="il-sec" id="knesset"><span data-t="knesset">Nächste Knesset</span> <button class="ib" data-tt="knessetTip">i</button></div>
+  <div class="il-card" id="perfCard" data-source="seats">
+    <h2><span data-t="perfT">Über- und Unterperformance der Parteien</span> <button class="ib" data-tt="perfTip">i</button></h2>
+    <p class="il-note" data-t="perfNote">Mobilisierungs-Index des Wählermilieus · Sitze gegenüber Umfrage</p>
+    <svg id="perf" width="100%" role="img" aria-label="parties"></svg>
+    <div class="il-tip" id="tip6"></div>
+  </div>
+  <div class="il-grid">
+    <div class="il-card" id="hemiCard" data-source="seats">
+      <h2><span data-t="seatsT">Sitzverteilung</span> <button class="ib" data-tt="seatsTip">i</button></h2>
+      <div class="il-seg" role="group" id="scen">
+        <button data-s="poll" aria-pressed="false" data-t="s_poll">Umfrage</button><button data-s="m50" aria-pressed="true" data-t="s_m50">Mobilisierung ½</button><button data-s="m100" aria-pressed="false" data-t="s_m100">voll</button>
+      </div>
+      <svg id="hemi" viewBox="0 0 320 175" width="100%" role="img" aria-label="seats"></svg>
+      <div class="il-party" id="plist"></div>
+      <div class="il-tip" id="tip3"></div>
+    </div>
+    <div class="il-card" id="coalCard" data-source="coal">
+      <h2><span data-t="coalT">Mögliche Mehrheiten</span> <button class="ib" data-tt="coalTip">i</button></h2>
+      <p class="il-note" data-t="coalNote">Sitze im gewählten Szenario · Linie = 61</p>
+      <svg id="coal" width="100%" role="img" aria-label="coalitions"></svg>
+    </div>
+  </div>
+
+  <div class="il-sec" id="ideen"><span data-t="ideas">Weitere Modelle</span> <button class="ib" data-tt="ideasTip">i</button></div>
+  <div class="il-ideas">
+    <div class="il-idea"><b><span data-t="i1">Hochrechnung Endbeteiligung</span> <button class="ib" data-tt="i1t">i</button></b><span data-t="i1s">Endwert je Ort aus dem Stundenverlauf.</span></div>
+    <div class="il-idea"><b><span data-t="i2">Hürden-Risiko</span> <button class="ib" data-tt="i2t">i</button></b><span data-t="i2s">Wer schafft die 3,25 %?</span></div>
+    <div class="il-idea"><b><span data-t="i3">Monte-Carlo-Mehrheiten</span> <button class="ib" data-tt="i3t">i</button></b><span data-t="i3s">Chance auf 61 je Lager.</span></div>
+    <div class="il-idea"><b><span data-t="i4">Profil-Regression</span> <button class="ib" data-tt="i4t">i</button></b><span data-t="i4s">Welches Wählerprofil wählt stärker?</span></div>
+    <div class="il-idea"><b><span data-t="i5">Exit-Poll-Abgleich</span> <button class="ib" data-tt="i5t">i</button></b><span data-t="i5s">Passt das Muster zu den Exit Polls?</span></div>
+    <div class="il-idea"><b><span data-t="i6">Sonderstimmen</span> <button class="ib" data-tt="i6t">i</button></b><span data-t="i6s">Was ändert sich bis Donnerstag?</span></div>
+  </div>
+</div>
+
+<script>
+window.IL_T={
+de:{title:'Israel-Wahl 2026 · Mobilisierung',asof:'Stand',hourIL:'Uhr (Israel) · Update alle 2 Std.',natTurnout:'Beteiligung landesweit',
+ natTurnoutTip:'Wahlkommission (CEC), Anteil der Wahlberechtigten zur genannten Stunde. Vergleich: gleiche Stunde 2022.',
+ c_rechts:'Rechts / Likud',c_haredi:'Haredi','c_mitte-links':'Mitte-links',c_raam:"Ra'am",c_joint:'Joint List',c_swing:'Swing','c_n.v.':'k. A.',places:'Orte',
+ tip_rechts:'Orte, in denen der Netanjahu-Block 2022 mind. 10 Punkte vorn lag (ohne Haredi-Orte). Index gewichtet nach Wahlberechtigten; 1,00 = wie das Land.',
+ tip_haredi:'Orte mit mind. 40 % für Shas + UTJ 2022 (u. a. Jerusalem, Bnei Brak, Beit Schemesch). Haredim wählen oft später am Tag.',
+ tip_ml:'Orte, in denen Yesh Atid, Nationale Einheit, Yisrael Beytenu, Arbeitspartei und Meretz 2022 mind. 10 Punkte vorn lagen.',
+ tip_raam:"Arabische Mehrheitsorte, in denen Ra'am 2022 vor Hadash-Ta'al + Balad lag (v. a. Negev).",
+ tip_joint:"Arabische Mehrheitsorte, in denen Hadash-Ta'al + Balad 2022 vorn lagen (v. a. Galiläa, Dreieck).",
+ tip_swing:'Blöcke 2022 weniger als 10 Punkte auseinander (z. B. Rishon LeZion, Rehovot).',
+ day:'Tagesverlauf',dayTip:'Landesweite Beteiligung je Stunde, 2026 gegen 2022 (CEC). Endwert 2022: 70,6 %.',dayNote:'Beteiligung in %, 2026 vs. 2022',
+ sec:'Sektoren nach Stimmbezirk',secTip:'Methode wie votes26.com: Stimmbezirke einem Sektor zugeordnet (CBS-Statistikgebiete; Hochburgen = Block ≥ 60 % im Schnitt 2019–22). Index = (Sektor jetzt ÷ Sektor 2022) ÷ (Land jetzt ÷ Land 2022). Genauer als Ortsebene, weil gemischte Städte aufgeteilt werden.',
+ secNote:'Tempo-Index; Balken rechts = stärker als sonst',
+ maps:'Karten',mapsTip:'Gemeindegrenzen der CEC-Wahlkarte. Westjordanland: nur israelische Orte. Kasten: Großraum Tel Aviv vergrößert. Grau: keine Daten.',
+ map1:'Über- und Unterperformer',map1Tip:'Tempo-Index = (Beteiligung jetzt ÷ Endbeteiligung 2022) ÷ (dasselbe landesweit). Grün > 1: stärker mobilisiert als sonst, rot < 1: schwächer.',map1Note:'Tempo gegenüber eigener Beteiligung 2022',
+ map2:'Hochburgen 2022',map2Tip:'Lager nach Ergebnis 2022 je Ort (CEC). Kräftige Farbe = großer Vorsprung.',map2Note:'Stärkstes Lager je Ort',
+ tbl:'Orte im Detail',tblTip:'Alle Orte mit Live-Daten der CEC; Spaltenkopf sortiert. N-Block = Likud, RZ, Shas, UTJ; W-Block = Yesh Atid, Nat. Einheit, YB, Arbeitspartei, Meretz. 10 h: Zwischenstand der Ortsdatei (ca. 9:40), nicht mit dem Landeswert vergleichbar.',
+ search:'Ort suchen',small:'auch kleine Orte',h_name:'Ort',h_camp:'Lager',h_elig:'Berecht.',h_now:'Aktuell',h_22:'Ende 2022',h_nb:'N-Block 22',h_cb:'W-Block 22',h_idx:'Tempo',
+ knesset:'Nächste Knesset',knessetTip:"Basis: Schnitt der letzten Umfragen von Kan, Kanal 12 und Kanal 13 (23.10.). Mobilisierung verschiebt Stimmanteile je Lager mit dem Tempo-Index; Sitze nach D'Hondt (Bader-Ofer), 3,25-%-Hürde, ohne Restmandats-Abkommen.",
+ seatsT:'Sitzverteilung',seatsTip:'Umfrage = reiner Umfrageschnitt. Mobilisierung ½ = halbe Wirkung des Index (vorsichtig), voll = volle Wirkung. Die Zwischendaten decken nur einen Teil der Wähler ab.',
+ s_poll:'Umfrage',s_m50:'Mobilisierung ½',s_m100:'voll',coalT:'Mögliche Mehrheiten',coalTip:'61 von 120 Sitzen nötig. Rechnerische Summen; politische Ausschlüsse sind nicht berücksichtigt.',coalNote:'Sitze im gewählten Szenario · Linie = 61',
+ ideas:'Weitere Modelle',ideasTip:'Machbar mit öffentlich verfügbaren Daten; auf Wunsch baue ich sie ein.',
+ i1:'Hochrechnung Endbeteiligung',i1t:'Stundenkurve 2022 je Ort; heutigen Verlauf darauf projizieren.',i1s:'Endwert je Ort aus dem Stundenverlauf.',
+ i2:'Hürden-Risiko',i2t:'Chance von Am Yisrael und Reservisten auf 3,25 % – aus Umfragestreuung plus Mobilisierung ihrer Milieus.',i2s:'Wer schafft die 3,25 %?',
+ i3:'Monte-Carlo-Mehrheiten',i3t:'Tausende Szenarien aus Umfragefehler und Mobilisierungsunsicherheit; Ergebnis: Wahrscheinlichkeit für 61 je Block.',i3s:'Chance auf 61 je Lager.',
+ i4:'Profil-Regression',i4t:'Ergebnis 2022 und Sozialprofil je Stimmbezirk als Prädiktoren für den Tempo-Index.',i4s:'Welches Wählerprofil wählt stärker?',
+ i5:'Exit-Poll-Abgleich',i5t:'Ab 22 Uhr Exit Polls von Kan, 12, 13, 14 gegen das Mobilisierungsmodell stellen.',i5s:'Passt das Muster zu den Exit Polls?',
+ i6:'Sonderstimmen',i6t:'Bis zu 650.000 Doppelumschläge (Soldaten u. a.); Verteilung 2022 als Basis für die Verschiebung nach Auszählung.',i6s:'Was ändert sich bis Donnerstag?',
+ takeaway:(hi,lo)=>`${hi} mobilisiert am stärksten über dem eigenen Normalniveau, ${lo} am schwächsten.`,
+ now:'Jetzt',end22:'Ende 2022',idx:'Tempo-Index',camp:'Lager',nb22:'Netanjahu-Block 2022',cb22:'Wechsel-Block 2022',ar22:'Arab. Parteien 2022',to22:'Beteiligung 2022',
+ est:'Prognose Ende',rep:(a,b)=>`${a} von ${b} Stimmbezirken gemeldet`,pts:'Pkt.',seats:'Sitze',mobIdx:'Mobilisierungs-Index',seatsCenter:'120 Sitze · Mehrheit 61',
+ inset:'Großraum Tel Aviv',hour:h=>`${h} Uhr`,h:'h',dec:',',
+ coal:{'NB':'Netanjahu-Block','NB+R':'Netanjahu-Block + Reservisten','WB':'Wechsel-Block','WB+R':'Wechsel + Reservisten','WB+R+RA':"Wechsel + Res. + Ra'am",'WB+R+RA+J':"Wechsel + Res. + Ra'am + Joint",'U':'Einheit: Likud + Yashar + Beyachad'},
+ sectors:{right:'Rechte Hochburgen',left:'Mitte-links-Hochburgen',secular:'Säkular',national_religious:'National-religiös',judea_samaria:'Judäa & Samaria',haredi:'Haredi',arab:'Arabisch',druze:'Drusisch',fsu:'Ex-UdSSR-Einwanderer',ethiopian:'Äthiopische Einwanderer',north:'Nordgrenze',gaza:'Gaza-Umland'}},
+en:{title:'Israel election 2026 · Mobilisation',asof:'As of',hourIL:'(Israel time) · updated every 2 hrs',natTurnout:'National turnout',
+ natTurnoutTip:'Central Elections Committee (CEC): share of eligible voters by the given hour, vs. the same hour in 2022.',
+ c_rechts:'Right / Likud',c_haredi:'Haredi','c_mitte-links':'Centre-left',c_raam:"Ra'am",c_joint:'Joint List',c_swing:'Swing','c_n.v.':'n/a',places:'places',
+ tip_rechts:'Localities where the Netanyahu bloc led by at least 10 points in 2022 (excl. Haredi towns). Weighted by eligible voters; 1.00 = national pace.',
+ tip_haredi:'Localities with at least 40% for Shas + UTJ in 2022 (e.g. Jerusalem, Bnei Brak, Beit Shemesh). Haredim often vote later in the day.',
+ tip_ml:'Localities where Yesh Atid, National Unity, Yisrael Beytenu, Labor and Meretz led by at least 10 points in 2022.',
+ tip_raam:"Arab-majority localities where Ra'am beat Hadash-Ta'al + Balad in 2022 (mostly Negev).",
+ tip_joint:"Arab-majority localities where Hadash-Ta'al + Balad led in 2022 (Galilee, Triangle).",
+ tip_swing:'Blocs within 10 points in 2022 (e.g. Rishon LeZion, Rehovot).',
+ day:'Turnout through the day',dayTip:'National turnout by hour, 2026 vs. 2022 (CEC). 2022 final: 70.6%.',dayNote:'Turnout in %, 2026 vs. 2022',
+ sec:'Sectors by polling station',secTip:'Method as on votes26.com: polling stations assigned to sectors (CBS statistical areas; strongholds = bloc ≥ 60% on average 2019–22). Index = (sector now ÷ sector 2022) ÷ (country now ÷ country 2022). Sharper than locality level because mixed cities are split.',
+ secNote:'Pace index; bar to the right = stronger than usual',
+ maps:'Maps',mapsTip:'Municipal boundaries from the CEC map. West Bank: Israeli localities only. Box: Greater Tel Aviv enlarged. Grey: no data.',
+ map1:'Over- and underperformers',map1Tip:'Pace index = (turnout now ÷ final 2022 turnout) ÷ (the same nationally). Green > 1: more mobilised than usual; red < 1: less.',map1Note:'Pace relative to own 2022 turnout',
+ map2:'Strongholds 2022',map2Tip:'Camp by 2022 result per locality (CEC). Stronger colour = larger lead.',map2Note:'Leading camp per locality',
+ tbl:'Localities',tblTip:'All localities with live CEC data; click a header to sort. N bloc = Likud, RZ, Shas, UTJ; C bloc = Yesh Atid, National Unity, YB, Labor, Meretz. 10 h: interim locality file (~9:40), not comparable with the national figure.',
+ search:'Search locality',small:'include small places',h_name:'Locality',h_camp:'Camp',h_elig:'Eligible',h_now:'Now',h_22:'Final 2022',h_nb:'N bloc 22',h_cb:'C bloc 22',h_idx:'Pace',
+ knesset:'Next Knesset',knessetTip:"Base: average of the final Kan, Channel 12 and Channel 13 polls (23 Oct). Mobilisation shifts each camp's vote share by its pace index; seats by D'Hondt (Bader-Ofer), 3.25% threshold, no surplus agreements.",
+ seatsT:'Seat distribution',seatsTip:'Poll = plain poll average. Mobilisation ½ = half the index effect (cautious), full = full effect. Interim data cover only part of the electorate.',
+ s_poll:'Poll',s_m50:'Mobilisation ½',s_m100:'full',coalT:'Possible majorities',coalTip:'61 of 120 seats needed. Arithmetic sums; political vetoes are not taken into account.',coalNote:'Seats in the selected scenario · line = 61',
+ ideas:'Further models',ideasTip:'Feasible with public data; I can add them on request.',
+ i1:'Final turnout projection',i1t:'2022 hourly curve per locality; project today\'s pace onto it.',i1s:'Final value per locality from the hourly curve.',
+ i2:'Threshold risk',i2t:'Chance for Am Yisrael and the Reservists to clear 3.25%, from poll spread plus mobilisation of their milieus.',i2s:'Who clears 3.25%?',
+ i3:'Monte Carlo majorities',i3t:'Thousands of scenarios from poll error and mobilisation uncertainty; result: probability of 61 per bloc.',i3s:'Chance of 61 per camp.',
+ i4:'Profile regression',i4t:'2022 result and social profile per polling station as predictors of the pace index.',i4s:'Which voter profile is turning out more?',
+ i5:'Exit-poll check',i5t:'From 22:00, compare the Kan, 12, 13 and 14 exit polls with the mobilisation model.',i5s:'Does the pattern match the exit polls?',
+ i6:'Special ballots',i6t:'Up to 650,000 double-envelope votes (soldiers etc.); 2022 distribution as basis for the post-count shift.',i6s:'What changes by Thursday?',
+ takeaway:(hi,lo)=>`${hi} is most mobilised relative to its usual level, ${lo} the least.`,
+ now:'Now',end22:'Final 2022',idx:'Pace index',camp:'Camp',nb22:'Netanyahu bloc 2022',cb22:'Change bloc 2022',ar22:'Arab parties 2022',to22:'Turnout 2022',
+ est:'Projected final',rep:(a,b)=>`${a} of ${b} polling stations reported`,pts:'pts',seats:'seats',mobIdx:'Mobilisation index',seatsCenter:'120 seats · majority 61',
+ inset:'Greater Tel Aviv',hour:h=>`${h}:00`,h:'h',dec:'.',
+ coal:{'NB':'Netanyahu bloc','NB+R':'Netanyahu bloc + Reservists','WB':'Change bloc','WB+R':'Change + Reservists','WB+R+RA':"Change + Res. + Ra'am",'WB+R+RA+J':"Change + Res. + Ra'am + Joint",'U':'Unity: Likud + Yashar + Beyachad'},
+ sectors:{right:'Right strongholds',left:'Centre-left strongholds',secular:'Secular',national_religious:'National religious',judea_samaria:'Judea & Samaria',haredi:'Haredi',arab:'Arab',druze:'Druze',fsu:'Former USSR immigrants',ethiopian:'Ethiopian immigrants',north:'Northern border',gaza:'Gaza envelope'}},
+he:{title:'בחירות 2026 · מוביליזציה',asof:'נכון ל־',hourIL:'(שעון ישראל) · עדכון כל שעתיים',natTurnout:'אחוז הצבעה ארצי',
+ natTurnoutTip:'ועדת הבחירות המרכזית: שיעור בעלי זכות הבחירה שהצביעו עד השעה, לעומת אותה שעה ב־2022.',
+ c_rechts:'ימין / ליכוד',c_haredi:'חרדים','c_mitte-links':'מרכז־שמאל',c_raam:'רע"ם',c_joint:'הרשימה המשותפת',c_swing:'מתנדנדים','c_n.v.':'אין נתון',places:'יישובים',
+ tip_rechts:'יישובים שבהם גוש נתניהו הוביל ב־10 נקודות לפחות ב־2022 (ללא ערים חרדיות). משוקלל לפי בעלי זכות בחירה; 1.00 = הקצב הארצי.',
+ tip_haredi:'יישובים עם 40% לפחות לש"ס ויהדות התורה ב־2022 (למשל ירושלים, בני ברק, בית שמש). חרדים מצביעים לרוב מאוחר יותר.',
+ tip_ml:'יישובים שבהם יש עתיד, המחנה הממלכתי, ישראל ביתנו, העבודה ומרצ הובילו ב־10 נקודות לפחות ב־2022.',
+ tip_raam:'יישובים ערביים שבהם רע"ם עקפה את חד"ש־תע"ל ובל"ד ב־2022 (בעיקר בנגב).',
+ tip_joint:'יישובים ערביים שבהם חד"ש־תע"ל ובל"ד הובילו ב־2022 (גליל, משולש).',
+ tip_swing:'הגושים במרחק של פחות מ־10 נקודות ב־2022 (למשל ראשון לציון, רחובות).',
+ day:'מהלך היום',dayTip:'אחוז הצבעה ארצי לפי שעה, 2026 מול 2022 (ועדת הבחירות). סופי 2022: 70.6%.',dayNote:'אחוז הצבעה, 2026 מול 2022',
+ sec:'מגזרים לפי קלפי',secTip:'שיטה כמו ב־votes26.com: קלפיות משויכות למגזר (אזורים סטטיסטיים של הלמ"ס; מעוזים = גוש של 60% ומעלה בממוצע 2019–22). מדד = (מגזר עכשיו ÷ מגזר 2022) ÷ (ארצי עכשיו ÷ ארצי 2022).',
+ secNote:'מדד קצב; עמודה ימינה = חזק מהרגיל',
+ maps:'מפות',mapsTip:'גבולות רשויות ממפת ועדת הבחירות. יהודה ושומרון: יישובים ישראליים בלבד. מסגרת: גוש דן מוגדל. אפור: אין נתונים.',
+ map1:'מעל ומתחת לקצב',map1Tip:'מדד קצב = (הצבעה עכשיו ÷ הצבעה סופית 2022) ÷ (אותו יחס ארצי). ירוק > 1: מגויס יותר מהרגיל; אדום < 1: פחות.',map1Note:'קצב ביחס להצבעה העצמית ב־2022',
+ map2:'מעוזים 2022',map2Tip:'מחנה לפי תוצאות 2022 בכל יישוב (ועדת הבחירות). צבע חזק = יתרון גדול.',map2Note:'המחנה המוביל בכל יישוב',
+ tbl:'יישובים',tblTip:'כל היישובים עם נתונים חיים; לחיצה על כותרת ממיינת. גוש נ׳ = ליכוד, הציונות הדתית, ש"ס, יהדות התורה; גוש ש׳ = יש עתיד, המחנה הממלכתי, ישראל ביתנו, העבודה, מרצ. 10:00: קובץ ביניים (כ־9:40).',
+ search:'חיפוש יישוב',small:'כולל יישובים קטנים',h_name:'יישוב',h_camp:'מחנה',h_elig:'בעלי זכות',h_now:'עכשיו',h_22:'סופי 2022',h_nb:'גוש נ׳ 22',h_cb:'גוש ש׳ 22',h_idx:'קצב',
+ knesset:'הכנסת הבאה',knessetTip:'בסיס: ממוצע הסקרים האחרונים של כאן, חדשות 12 וחדשות 13 (23.10). המוביליזציה מזיזה את חלק כל מחנה לפי מדד הקצב; מנדטים לפי שיטת בדר־עופר, אחוז חסימה 3.25%, ללא הסכמי עודפים.',
+ seatsT:'חלוקת מנדטים',seatsTip:'סקר = ממוצע הסקרים. מוביליזציה ½ = חצי מהשפעת המדד (זהיר), מלא = השפעה מלאה. נתוני הביניים מכסים רק חלק מהבוחרים.',
+ s_poll:'סקר',s_m50:'מוביליזציה ½',s_m100:'מלא',coalT:'רוב אפשרי',coalTip:'נדרשים 61 מתוך 120. סכומים חשבוניים; פסילות פוליטיות אינן נלקחות בחשבון.',coalNote:'מנדטים בתרחיש הנבחר · קו = 61',
+ ideas:'מודלים נוספים',ideasTip:'אפשרי עם נתונים פומביים; ניתן להוסיף לפי בקשה.',
+ i1:'תחזית אחוז הצבעה סופי',i1t:'עקומת השעות של 2022 לכל יישוב; הקרנת הקצב של היום עליה.',i1s:'ערך סופי לכל יישוב לפי מהלך השעות.',
+ i2:'סיכון אחוז החסימה',i2t:'סיכוי של עם ישראל והמילואימניקים לעבור 3.25%, מפיזור הסקרים והמוביליזציה של הקהלים שלהם.',i2s:'מי עובר את 3.25%?',
+ i3:'רוב במונטה קרלו',i3t:'אלפי תרחישים מטעות הסקרים ואי־ודאות המוביליזציה; תוצאה: הסתברות ל־61 לכל גוש.',i3s:'סיכוי ל־61 לכל מחנה.',
+ i4:'רגרסיית פרופיל',i4t:'תוצאות 2022 ופרופיל חברתי לכל קלפי כמנבאים של מדד הקצב.',i4s:'איזה פרופיל מצביע יותר?',
+ i5:'השוואה למדגמים',i5t:'מ־22:00, השוואת המדגמים של כאן, 12, 13 ו־14 למודל המוביליזציה.',i5s:'האם הדפוס תואם את המדגמים?',
+ i6:'מעטפות כפולות',i6t:'עד 650 אלף מעטפות כפולות (חיילים ועוד); התפלגות 2022 כבסיס לשינוי אחרי הספירה.',i6s:'מה ישתנה עד יום חמישי?',
+ takeaway:(hi,lo)=>`${hi} מגויס הכי הרבה ביחס לרמה הרגילה שלו, ${lo} הכי פחות.`,
+ now:'עכשיו',end22:'סופי 2022',idx:'מדד קצב',camp:'מחנה',nb22:'גוש נתניהו 2022',cb22:'גוש השינוי 2022',ar22:'מפלגות ערביות 2022',to22:'אחוז הצבעה 2022',
+ est:'תחזית סופית',rep:(a,b)=>`${a} מתוך ${b} קלפיות דיווחו`,pts:'נק׳',seats:'מנדטים',mobIdx:'מדד מוביליזציה',seatsCenter:'120 מנדטים · רוב 61',
+ inset:'גוש דן',hour:h=>`${h}:00`,h:'',dec:'.',
+ coal:{'NB':'גוש נתניהו','NB+R':'גוש נתניהו + המילואימניקים','WB':'גוש השינוי','WB+R':'שינוי + המילואימניקים','WB+R+RA':'שינוי + מילואימניקים + רע"ם','WB+R+RA+J':'שינוי + מילואימניקים + רע"ם + המשותפת','U':'אחדות: ליכוד + ישר + ביחד'},
+ sectors:{right:'מעוזי ימין',left:'מעוזי מרכז־שמאל',secular:'חילונים',national_religious:'דתיים־לאומיים',judea_samaria:'יהודה ושומרון',haredi:'חרדים',arab:'ערבים',druze:'דרוזים',fsu:'עולי ברה"מ',ethiopian:'עולי אתיופיה',north:'קו העימות בצפון',gaza:'עוטף עזה'}}
+};
+window.IL_PARTY={
+ en:{'Yashar (Eisenkot)':'Yashar (Eisenkot)','Likud (Netanjahu)':'Likud (Netanyahu)','Beyachad (Bennett)':'Beyachad (Bennett)','Demokraten (Golan)':'Democrats (Golan)','Joint List':'Joint List','Yisrael Beytenu (Liberman)':'Yisrael Beytenu (Liberman)','Otzma Yehudit (Ben-Gvir)':'Otzma Yehudit (Ben-Gvir)','UTJ':'UTJ','Shas (Deri)':'Shas (Deri)','Religiöser Zionismus (Smotrich)':'Religious Zionism (Smotrich)',"Ra'am (Abbas)":"Ra'am (Abbas)",'Reservisten (Hendel)':'Reservists (Hendel)','Am Yisrael (Winter)':'Am Yisrael (Winter)','Haredi Public (Leitner)':'Haredi Public (Leitner)'},
+ he:{'Yashar (Eisenkot)':'ישר (איזנקוט)','Likud (Netanjahu)':'הליכוד (נתניהו)','Beyachad (Bennett)':'ביחד (בנט)','Demokraten (Golan)':'הדמוקרטים (גולן)','Joint List':'הרשימה המשותפת','Yisrael Beytenu (Liberman)':'ישראל ביתנו (ליברמן)','Otzma Yehudit (Ben-Gvir)':'עוצמה יהודית (בן גביר)','UTJ':'יהדות התורה','Shas (Deri)':'ש"ס (דרעי)','Religiöser Zionismus (Smotrich)':'הציונות הדתית (סמוטריץ׳)',"Ra'am (Abbas)":'רע"ם (עבאס)','Reservisten (Hendel)':'המילואימניקים (הנדל)','Am Yisrael (Winter)':'עם ישראל (וינטר)','Haredi Public (Leitner)':'הציבור החרדי (לייטנר)'}};
+
+Object.assign(window.IL_T.de,{perfT:'Über- und Unterperformance der Parteien',perfTip:'Balken: Mobilisierungs-Index des Milieus jeder Partei (aus den Lager-Hochburgen; Shas, Yisrael Beytenu, Reservisten als Mischwert). Rechts von 1 = Milieu wählt stärker als sonst. Zahl rechts: Sitze im gewählten Szenario gegenüber der Umfrage.',perfNote:'Mobilisierungs-Index des Wählermilieus · Sitze gegenüber Umfrage',projT:'Prognose Endbeteiligung',projTip:'Methode votes26.com: Regression der Endbeteiligung auf den Stand zur selben Stunde, Wahlen 2003–2022; Spanne = Prognoseintervall.',range:'Spanne',
+ soc:'Israels Gesellschaft nach Sektoren',socTip:'Sektoren und Stimmbezirks-Zuordnung von votes26.com (CBS-Statistikgebiete). Sektoren überschneiden sich (z. B. Ex-UdSSR ⊂ säkular). Balken: Wahlberechtigte, Stimmanteile der Parteifamilien, Beteiligung 2019–2022 und Prognose 2026.',
+ size:'Berechtigte',share:'Stimmanteile',turnoutHist:'Beteiligung',p26:'Prognose 2026',
+ fam:{likud:'Likud',shas:'Shas',utj:'UTJ',rz:'Rel. Zionismus',yb:'Yisrael Beytenu',center:'Mitte',left:'Links',arab:'Arab. Parteien',other:'Andere'}});
+Object.assign(window.IL_T.en,{perfT:'Party over- and underperformance',perfTip:"Bars: mobilisation index of each party's voter milieu (from camp strongholds; Shas, Yisrael Beytenu and the Reservists as blends). Right of 1 = milieu turning out more than usual. Number on the right: seats in the selected scenario vs. the poll.",perfNote:'Mobilisation index of the voter milieu · seats vs. poll',projT:'Projected final turnout',projTip:'votes26.com method: regression of final turnout on turnout at the same hour, elections 2003–2022; range = prediction interval.',range:'Range',
+ soc:"Israel's society by sector",socTip:'Sectors and polling-station assignment from votes26.com (CBS statistical areas). Sectors overlap (e.g. former USSR ⊂ secular). Bars: eligible voters, vote shares of party families, turnout 2019–2022 and 2026 projection.',
+ size:'Eligible',share:'Vote shares',turnoutHist:'Turnout',p26:'2026 projection',
+ fam:{likud:'Likud',shas:'Shas',utj:'UTJ',rz:'Rel. Zionism',yb:'Yisrael Beytenu',center:'Centre',left:'Left',arab:'Arab parties',other:'Other'}});
+Object.assign(window.IL_T.he,{perfT:'ביצועי המפלגות מעל ומתחת לצפוי',perfTip:'עמודות: מדד המוביליזציה של קהל הבוחרים של כל מפלגה (ממעוזי המחנות; ש"ס, ישראל ביתנו והמילואימניקים כשילוב). מימין ל־1 = הקהל מצביע יותר מהרגיל. המספר מימין: מנדטים בתרחיש הנבחר מול הסקר.',perfNote:'מדד מוביליזציה של קהל הבוחרים · מנדטים מול הסקר',projT:'תחזית אחוז הצבעה סופי',projTip:'שיטת votes26.com: רגרסיה של אחוז ההצבעה הסופי על אחוז ההצבעה באותה שעה, בחירות 2003–2022; טווח = רווח ניבוי.',range:'טווח',
+ soc:'החברה הישראלית לפי מגזרים',socTip:'מגזרים ושיוך קלפיות מ־votes26.com (אזורים סטטיסטיים של הלמ"ס). המגזרים חופפים חלקית. עמודות: בעלי זכות בחירה, חלוקת הקולות לפי משפחות מפלגות, אחוז הצבעה 2019–2022 ותחזית 2026.',
+ size:'בעלי זכות',share:'חלוקת קולות',turnoutHist:'אחוז הצבעה',p26:'תחזית 2026',
+ fam:{likud:'ליכוד',shas:'ש"ס',utj:'יהדות התורה',rz:'ציונות דתית',yb:'ישראל ביתנו',center:'מרכז',left:'שמאל',arab:'מפלגות ערביות',other:'אחרות'}});
+</script>
+
+<script>
+(function(){
+dash.calc('latest',{inputs:['national'],title:'Letzter Stand landesweit',description:'Letzte Stunde mit Wert 2026, derselbe Zeitpunkt 2022 und die Differenz.',
+ fn:(national)=>{const r=national.filter(x=>x.y2026!==null&&x.y2026!==undefined).map(x=>({hour:Number(x.hour),y2026:Number(x.y2026),y2022:x.y2022==null?null:Number(x.y2022)})).sort((a,b)=>a.hour-b.hour);
+  const l=r[r.length-1];return [{hour:l.hour,y2026:l.y2026,y2022:l.y2022,delta:l.y2022==null?null:Math.round((l.y2026-l.y2022)*10)/10}];}});
+
+dash.calc('mob',{inputs:['muni','turnout','national'],title:'Tempo-Index je Ort',description:'Beteiligung jetzt ÷ Endbeteiligung 2022, relativ zum selben Verhältnis landesweit.',
+ fn:(muni,turnout,national)=>{
+  const nat={};national.forEach(n=>{if(n.y2026!==null&&n.y2026!==undefined)nat[Number(n.hour)]=Number(n.y2026);});
+  const fin=Number(national.find(n=>Number(n.hour)===22).y2022);
+  const hrs=Object.keys(nat).map(Number).filter(h=>h<22).sort((a,b)=>a-b);const H=hrs[hrs.length-1],P=hrs.length>1&&hrs[hrs.length-2]>=12?hrs[hrs.length-2]:null;
+  const T={};turnout.forEach(t=>{(T[t.code]=T[t.code]||{})[Number(t.hour)]=Number(t.turnout);});
+  return muni.map(m=>{const t=T[m.code]||{};const b=m.turnout22==null?null:Number(m.turnout22);
+   const ix=h=>h==null||t[h]==null||!b?null:Math.round(((t[h]/b)/(nat[h]/fin))*100)/100;
+   return {code:m.code,name:m.name,name_he:m.name_he,camp:m.camp,camp_label:m.camp,eligible:m.eligible,t10:t[10]==null?null:t[10],t_now:t[H]==null?null:t[H],hour:H,
+    turnout22:b,nbloc22:m.nbloc22,cbloc22:m.cbloc22,arab22:m.arab22,idx:ix(H),idx_prev:ix(P)};});}});
+
+dash.calc('camps',{inputs:['mob'],title:'Tempo-Index je Lager',description:'Index je Lager, gewichtet: Σ(Berecht.×Index×Beteiligung 2022) ÷ Σ(Berecht.×Beteiligung 2022).',
+ fn:(mob)=>{const by={};mob.forEach(m=>{if(m.idx==null)return;const b=by[m.camp]=by[m.camp]||{a:0,b:0,n:0,e:0,ap:0,bp:0};
+  b.a+=m.eligible*m.idx*m.turnout22;b.b+=m.eligible*m.turnout22;b.n++;b.e+=m.eligible;if(m.idx_prev!=null){b.ap+=m.eligible*m.idx_prev*m.turnout22;b.bp+=m.eligible*m.turnout22;}});
+  return ['rechts','haredi','mitte-links','raam','joint','swing'].map(k=>{const b=by[k];return b?{camp:k,idx:Math.round(b.a/b.b*100)/100,n:b.n,eligible:b.e,idx_prev:b.bp?Math.round(b.ap/b.bp*100)/100:null}:{camp:k,idx:null,n:0,eligible:0,idx_prev:null};});}});
+
+dash.calc('seats',{inputs:['polls','camps'],title:'Sitze je Szenario',description:"Umfrageschnitt; Stimmanteile mit Lager-Index gewichtet (0, ½, voll); Hürde 3,25 %; D'Hondt auf 120 Sitze.",
+ fn:(polls,camps)=>{const ci={};camps.forEach(c=>{ci[c.camp]=c.idx==null?1:Number(c.idx);});
+  const g=k=>({shas:((ci.rechts||1)+(ci.haredi||1))/2,yb:((ci.rechts||1)+(ci['mitte-links']||1))/2,mix:((ci.rechts||1)+(ci['mitte-links']||1))/2})[k]||ci[k]||1;
+  const avg=(r,p)=>{const v=['kan','c12','c13'].map(s=>r[p+s]).filter(x=>x!==null&&x!==undefined&&x!=='').map(Number);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;};
+  const OTHER=1.2;const smallTot=polls.filter(r=>avg(r,'pct_')!=null).reduce((s,r)=>s+avg(r,'pct_'),0);
+  const base=polls.map(r=>({party:r.party,bloc:r.bloc,idx:Math.round(g(r.camp)*100)/100,sh:avg(r,'pct_')!=null?avg(r,'pct_'):avg(r,'seats_')/120*(100-smallTot-OTHER)}));
+  const run=d=>{const sh=base.map(b=>b.sh*(1+d*(b.idx-1)));const tot=sh.reduce((a,b)=>a+b,0)+OTHER;const pct=sh.map(s=>s/tot*100);const seats=pct.map(()=>0);
+   for(let i=0;i<120;i++){let bi=-1,bv=-1;pct.forEach((p,j)=>{if(p>=3.25){const q=p/(seats[j]+1);if(q>bv){bv=q;bi=j;}}});seats[bi]++;}return {pct,seats};};
+  const a=run(0),b=run(.5),c=run(1);
+  return base.map((r,j)=>({party:r.party,bloc:r.bloc,idx:r.idx,share_poll:Math.round(a.pct[j]*10)/10,seats_poll:a.seats[j],share_m50:Math.round(b.pct[j]*10)/10,seats_m50:b.seats[j],share_m100:Math.round(c.pct[j]*10)/10,seats_m100:c.seats[j]}));}});
+
+dash.calc('coal',{inputs:['seats'],title:'Mögliche Mehrheiten',description:'Summe der Sitze je Bündnis-Option und Szenario; 61 = Mehrheit.',
+ fn:(seats)=>{const S=(names,col)=>seats.filter(s=>names.some(n=>s.party.startsWith(n))).reduce((a,s)=>a+s[col],0);
+  const NB=['Likud','Otzma','Religiöser','Shas','UTJ','Am Yisrael','Haredi Public'],WB=['Yashar','Beyachad','Demokraten','Yisrael Beytenu'];
+  return [['NB',NB],['NB+R',NB.concat(['Reservisten'])],['WB',WB],['WB+R',WB.concat(['Reservisten'])],['WB+R+RA',WB.concat(['Reservisten',"Ra'am"])],['WB+R+RA+J',WB.concat(['Reservisten',"Ra'am",'Joint'])],['U',['Likud','Yashar','Beyachad']]]
+   .map(([name,m])=>({name,poll:S(m,'seats_poll'),m50:S(m,'seats_m50'),m100:S(m,'seats_m100')}));}});
+
+let lang='de';
+const T=k=>{const v=window.IL_T[lang][k];return v===undefined?window.IL_T.de[k]:v;};
+const PN=p=>lang==='de'?p:(window.IL_PARTY[lang][p]||p);
+const CN=c=>T('c_'+c)||c;
+const PCOL={"Yashar":"#1d6fd8","Likud":"#0038b8","Beyachad":"#4bb3e6","Demokraten":"#e0457b","Joint":"#2e9e5b","Yisrael Beytenu":"#6a4fb3","Otzma":"#c9a400","UTJ":"#333333","Shas":"#111111","Religiöser":"#c48a1d","Ra'am":"#15803d","Reservisten":"#8899aa","Am Yisrael":"#9b6b43","Haredi Public":"#555"};
+const pcol=p=>{const k=Object.keys(PCOL).find(k=>p.startsWith(k));return k?PCOL[k]:'#999';};
+const CAMPC={rechts:'#0038b8',haredi:'#3a3a3a','mitte-links':'#4bb3e6',raam:'#15803d',joint:'#d39b1a',swing:'#a0a8b3'};
+const num=(v,d)=>{const s=v.toFixed(d);return T('dec')===','?s.replace('.',','):s;};
+const pc=v=>v==null?'—':num(Number(v),1)+' %';const ix=v=>v==null?'—':num(Number(v),2);const pp=v=>v==null?'—':num(Number(v),1);
+const fk=v=>v==null?'—':Number(v).toLocaleString(lang==='de'?'de-DE':lang==='he'?'he-IL':'en-US');
+const nm=m=>lang==='he'&&m.name_he?m.name_he:m.name;
+let scen='m50';let sortKey='eligible',sortDir=-1;
+
+function applyLang(){const root=document.getElementById('il');root.setAttribute('dir',lang==='he'?'rtl':'ltr');root.setAttribute('lang',lang);
+ root.querySelectorAll('[data-t]').forEach(el=>{const v=T(el.getAttribute('data-t'));if(typeof v==='string')el.textContent=v;});
+ root.querySelectorAll('[data-tt]').forEach(el=>{el.setAttribute('data-tip',T(el.getAttribute('data-tt')));el.setAttribute('aria-label',T(el.getAttribute('data-tt')));});
+ root.querySelectorAll('[data-tp]').forEach(el=>el.setAttribute('placeholder',T(el.getAttribute('data-tp'))));
+ document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));}
+document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;applyLang();drawAll();}));
+applyLang();
+
+// ---------- own Mercator (no d3-geo needed) ----------
+const MX=lon=>lon*Math.PI/180,MY=lat=>Math.log(Math.tan(Math.PI/4+lat*Math.PI/360));
+function fitter(bb,x0,y0,x1,y1){const sx=(x1-x0)/(bb[2]-bb[0]),sy=(y1-y0)/(bb[3]-bb[1]),s=Math.min(sx,sy);const ox=x0+((x1-x0)-s*(bb[2]-bb[0]))/2,oy=y0+((y1-y0)-s*(bb[3]-bb[1]))/2;
+ return (lon,lat)=>[ox+(MX(lon)-bb[0])*s,oy+(bb[3]-MY(lat))*s];}
+let geoCache=null;
+function geo(){const SH=dash.data('shapes');if(SH.status!=='ok')return null;if(geoCache&&geoCache.src===SH.data)return geoCache;
+ const f=SH.data.map(s=>({code:s.code,g:JSON.parse(s.geometry)}));let bb=[Infinity,Infinity,-Infinity,-Infinity];
+ const rings=g=>g.type==='Polygon'?g.coordinates:g.type==='MultiPolygon'?g.coordinates.flat():[];
+ f.forEach(o=>rings(o.g).forEach(r=>r.forEach(([x,y])=>{const X=MX(x),Y=MY(y);if(X<bb[0])bb[0]=X;if(Y<bb[1])bb[1]=Y;if(X>bb[2])bb[2]=X;if(Y>bb[3])bb[3]=Y;})));
+ geoCache={src:SH.data,f,bb,rings};return geoCache;}
+const INSET={x0:186,y0:300,x1:296,y1:430,box:[34.70,31.93,34.99,32.21]};
+function pathOf(rings,P){return rings.map(r=>r.map((c,i)=>{const p=P(c[0],c[1]);return (i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1);}).join('')+'Z').join('');}
+function drawMap(id,fill,tipLines){const G=geo();const svg=d3.select('#'+id);svg.selectAll('*').remove();if(!G)return;
+ const main=fitter(G.bb,6,6,214,634);const b=INSET.box;const ins=fitter([MX(b[0]),MY(b[1]),MX(b[2]),MY(b[3])],INSET.x0+3,INSET.y0+3,INSET.x1-3,INSET.y1-3);
+ const card=document.getElementById(id+'card'),tip=d3.select(id==='map1'?'#tip1':'#tip2');
+ svg.append('defs').append('clipPath').attr('id',id+'c').append('rect').attr('x',INSET.x0).attr('y',INSET.y0).attr('width',INSET.x1-INSET.x0).attr('height',INSET.y1-INSET.y0).attr('rx',3);
+ const layer=(g,P,sw)=>G.f.forEach(o=>{g.append('path').attr('d',pathOf(G.rings(o.g),P)).attr('fill',fill(o.code)||'var(--color-border-line)').attr('stroke','var(--color-panel)').attr('stroke-width',sw)
+   .style('cursor','pointer').on('mousemove',ev=>{const L=tipLines(o.code);if(L)tipAt(tip,card,ev,L);}).on('mouseleave',()=>tip.style('opacity',0));});
+ const BG=dash.data('background');svg.append('rect').attr('x',0).attr('y',0).attr('width',300).attr('height',640).attr('fill','color-mix(in srgb,#0038b8 9%,var(--color-panel))');
+ const bgL=svg.append('g');const pat=svg.select('defs').append('pattern').attr('id',id+'h').attr('width',4).attr('height',4).attr('patternUnits','userSpaceOnUse').attr('patternTransform','rotate(45)');
+ pat.append('rect').attr('width',4).attr('height',4).attr('fill','var(--color-panel)');pat.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',4).attr('stroke','#0038b8').attr('stroke-opacity',.18).attr('stroke-width',1.2);
+ const bgs=BG.status==='ok'?BG.data:[];
+ const drawBg=(P,g)=>{bgs.filter(b=>b.kind==='country').forEach(b=>{const gg=JSON.parse(b.geometry);const rings=gg.type==='Polygon'?gg.coordinates:gg.coordinates.flat();
+   const isIL=b.name==='Israel',isPS=b.name==='Palestine';g.append('path').attr('d',pathOf(rings,P)).attr('fill',isIL?'var(--color-panel)':isPS?`url(#${id}h)`:'color-mix(in srgb,var(--color-fg) 6%,var(--color-panel))')
+   .attr('stroke',isIL||isPS?'#0038b8':'var(--color-fg-muted)').attr('stroke-width',isIL?.8:.5).attr('stroke-opacity',isIL?.7:.5).attr('stroke-dasharray',isPS?'2 1.5':null);});
+  bgs.filter(b=>b.kind==='lake').forEach(b=>{const gg=JSON.parse(b.geometry);const rings=gg.type==='Polygon'?gg.coordinates:gg.coordinates.flat();g.append('path').attr('d',pathOf(rings,P)).attr('fill','color-mix(in srgb,#0038b8 22%,var(--color-panel))').attr('stroke','none');});};
+ drawBg(main,bgL);
+ layer(svg.append('g'),main,.15);
+ const c0=main(b[0],b[3]),c1=main(b[2],b[1]);svg.append('rect').attr('x',c0[0]).attr('y',c0[1]).attr('width',c1[0]-c0[0]).attr('height',c1[1]-c0[1]).attr('fill','none').attr('stroke','#0038b8').attr('stroke-width',.6);
+ svg.append('rect').attr('x',INSET.x0).attr('y',INSET.y0).attr('width',INSET.x1-INSET.x0).attr('height',INSET.y1-INSET.y0).attr('rx',3).attr('fill','var(--color-panel)').attr('stroke','#0038b8').attr('stroke-width',.8);
+ {const gi=svg.append('g').attr('clip-path',`url(#${id}c)`);drawBg(ins,gi);}
+ layer(svg.append('g').attr('clip-path',`url(#${id}c)`),ins,.3);
+ bgs.filter(b=>b.kind.startsWith('label_')).forEach(b=>{const k=b.kind.slice(6);const p=main(Number(b.lon),Number(b.lat));const t=lang==='he'?b.name_he:lang==='en'?b.name_en:b.name;
+  if(p[0]>INSET.x0-4&&p[0]<INSET.x1+4&&p[1]>INSET.y0-4&&p[1]<INSET.y1+4)return;
+  const el=svg.append('text').attr('x',p[0]).attr('y',p[1]).attr('text-anchor','middle').attr('font-size',k==='city'?7.5:k==='terr'?7:9).attr('font-style',k==='sea'?'italic':null)
+   .attr('fill',k==='city'?'var(--color-fg)':'var(--color-fg-muted)').attr('font-weight',k==='city'?600:400).attr('letter-spacing',k==='country'||k==='sea'?1.2:null).style('pointer-events','none').text(t);
+  if(k==='sea')el.attr('transform',`rotate(-75,${p[0]},${p[1]})`);
+  if(k==='city'){el.attr('paint-order','stroke').attr('stroke','var(--color-panel)').attr('stroke-width',2.2).attr('stroke-opacity',.85);svg.append('circle').attr('cx',p[0]).attr('cy',p[1]+3).attr('r',1.4).attr('fill','var(--color-fg)').style('pointer-events','none');el.attr('y',p[1]-2);}});
+ svg.append('text').attr('x',INSET.x0).attr('y',INSET.y0-4).attr('font-size',9).attr('fill','var(--color-fg-muted)').text(T('inset'));}
+function tipAt(tip,card,ev,lines){const t=tip.node();t.replaceChildren();t.setAttribute('dir',lang==='he'?'rtl':'ltr');lines.forEach((l,i)=>{const d=document.createElement('div');if(i===0){const b=document.createElement('b');b.textContent=l;d.appendChild(b);}else d.textContent=l;t.appendChild(d);});
+ const r=card.getBoundingClientRect();t.style.opacity=1;t.style.right='auto';const w=t.offsetWidth||150;let x=ev.clientX-r.left+12,y=ev.clientY-r.top+12;if(x+w>r.width-4)x=Math.max(4,ev.clientX-r.left-w-12);t.style.left=x+'px';t.style.top=y+'px';}
+
+// ---------- draw ----------
+function drawAll(){
+ const L=dash.data('latest'),M=dash.data('mob'),C=dash.data('camps'),MU=dash.data('muni'),N=dash.data('national');
+ const tk=document.getElementById('takeaway');
+ if(L.status==='ok'&&L.data.length){const l=L.data[0];document.getElementById('stamp').textContent=l.hour+':00';document.getElementById('natNow').textContent=pc(l.y2026);
+  document.getElementById('natThen').textContent=pc(l.y2022);const d=document.getElementById('natDelta');d.textContent=(l.delta>0?'+':'')+pp(l.delta)+' '+T('pts');d.className=l.delta>=0?'il-up':'il-down';}
+ if(C.status==='ok'){
+  document.querySelectorAll('[data-source=camps]').forEach(el=>{const k=el.getAttribute('data-where').split('=')[1];const r=C.data.find(c=>c.camp===k);const fld=el.getAttribute('data-field');
+   if(fld==='idx'){el.textContent=ix(r&&r.idx);el.className='il-big '+(r&&r.idx>=1.03?'il-up':r&&r.idx<=0.97?'il-down':'');}else el.textContent=r?fk(r.n):'—';});
+  const cs=C.data.filter(c=>c.idx!=null&&c.camp!=='swing');if(cs.length){const hi=cs.reduce((a,b)=>b.idx>a.idx?b:a),lo=cs.reduce((a,b)=>b.idx<a.idx?b:a);
+   tk.textContent=T('takeaway')(CN(hi.camp),CN(lo.camp));tk.classList.remove('dash-skeleton');}
+ } else if(C.status==='error')tk.classList.remove('dash-skeleton');
+ drawDay(N);drawSec(dash.data('sectors'));drawSoc();
+ if(N.status==='ok'){const e=N.data.find(r=>Number(r.hour)===22);if(e&&e.est!=null){document.getElementById('natEst').textContent=pc(e.est);document.getElementById('natLo').textContent=pp(e.lo);document.getElementById('natHi').textContent=pc(e.hi);}}
+ if(M.status==='ok'){const by=new Map(M.data.map(m=>[m.code,m]));const col=d3.scaleLinear([0.8,1,1.2],['#d64545','#f2f2f2','#1e9e5a']).clamp(true);
+  drawMap('map1',c=>{const m=by.get(c);return m&&m.idx!=null?col(m.idx):null;},c=>{const m=by.get(c);if(!m)return null;
+   return [nm(m),`${T('now')} (${m.hour}:00): ${pc(m.t_now)}`,`${T('end22')}: ${pc(m.turnout22)}`,`${T('idx')}: ${ix(m.idx)}`,`${T('camp')}: ${CN(m.camp)}`];});}
+ if(MU.status==='ok'){const by=new Map(MU.data.map(m=>[m.code,m]));
+  drawMap('map2',c=>{const m=by.get(c);if(!m||!CAMPC[m.camp])return null;const mg=m.camp==='raam'||m.camp==='joint'?m.arab22-50:m.camp==='haredi'?40:Math.abs(m.nbloc22-m.cbloc22);
+   return d3.interpolateRgb('#ffffff',CAMPC[m.camp])(Math.min(1,.35+mg/60));},
+   c=>{const m=by.get(c);if(!m)return null;return [nm(m),CN(m.camp),`${T('nb22')}: ${pc(m.nbloc22)}`,`${T('cb22')}: ${pc(m.cbloc22)}`,`${T('ar22')}: ${pc(m.arab22)}`,`${T('to22')}: ${pc(m.turnout22)}`];});
+  const lg=document.getElementById('leg2');lg.replaceChildren();Object.keys(CAMPC).forEach(k=>{const s=document.createElement('span');const i=document.createElement('i');i.style.background=CAMPC[k];s.appendChild(i);s.appendChild(document.createTextNode(CN(k)));lg.appendChild(s);});}
+ drawTable();drawPerf(dash.data('seats'));drawGauges(C);drawSeats(dash.data('seats'));drawCoal(dash.data('coal'));}
+dash.onData(drawAll);
+
+function drawDay(N){const svg=d3.select('#day');svg.selectAll('*').remove();if(N.status!=='ok')return;const card=document.getElementById('dayCard');const W=Math.max(260,card.clientWidth-48),H=180,m={l:30,r:12,t:10,b:22};
+ svg.attr('viewBox',`0 0 ${W} ${H}`);const x=d3.scaleLinear([8,22],[m.l,W-m.r]),y=d3.scaleLinear([0,80],[H-m.b,m.t]);
+ y.ticks(4).forEach(t=>{svg.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(t)).attr('y2',y(t)).attr('stroke','var(--cds-chart-grid)');svg.append('text').attr('x',m.l-5).attr('y',y(t)+3).attr('text-anchor','end').attr('font-size',10).attr('fill','var(--color-fg-muted)').text(t);});
+ [8,10,12,14,16,18,20,22].forEach(h=>svg.append('text').attr('x',x(h)).attr('y',H-6).attr('text-anchor','middle').attr('font-size',10).attr('fill','var(--color-fg-muted)').text(h+':00'));
+ const pts=k=>[{h:7,v:0}].concat(N.data.filter(r=>r[k]!=null).map(r=>({h:Number(r.hour),v:Number(r[k])})).sort((a,b)=>a.h-b.h));const tip=d3.select('#tip0');
+ [['y2022','#9aa5b1'],['y2026','#0038b8']].forEach(([k,c])=>{const p=pts(k).filter(d=>d.h>=8||d.v===0).map(d=>d.h<8?{h:8,v:0}:d);svg.append('path').attr('d',d3.line().x(d=>x(d.h)).y(d=>y(d.v))(p)).attr('fill','none').attr('stroke',c).attr('stroke-width',2).attr('stroke-linecap','round').attr('stroke-linejoin','round');
+  p.slice(1).forEach(d=>svg.append('circle').attr('cx',x(d.h)).attr('cy',y(d.v)).attr('r',3.5).attr('fill',c).on('mousemove',ev=>tipAt(tip,card,ev,[T('hour')(d.h),`${k==='y2026'?'2026':'2022'}: ${pc(d.v)}`])).on('mouseleave',()=>tip.style('opacity',0)));});
+ const e=N.data.find(r=>Number(r.hour)===22);if(e&&e.est!=null){const X=x(22)-6;svg.append('line').attr('x1',X).attr('x2',X).attr('y1',y(e.lo)).attr('y2',y(e.hi)).attr('stroke','#0038b8').attr('stroke-width',6).attr('stroke-opacity',.2).attr('stroke-linecap','round');
+  svg.append('circle').attr('cx',X).attr('cy',y(e.est)).attr('r',4).attr('fill','var(--color-panel)').attr('stroke','#0038b8').attr('stroke-width',2).on('mousemove',ev=>tipAt(tip,card,ev,[T('projT'),`${pc(e.est)} (${pp(e.lo)}–${pc(e.hi)})`])).on('mouseleave',()=>tip.style('opacity',0));}}
+
+function drawSec(SD){const svg=d3.select('#sec');svg.selectAll('*').remove();if(SD.status!=='ok')return;const card=document.getElementById('secCard'),tip=d3.select('#tip4');
+ const rows=[...SD.data].filter(r=>r.idx!=null).sort((a,b)=>b.idx-a.idx);const W=Math.max(260,card.clientWidth-48),rh=22,lw=Math.min(160,W*0.45),H=rows.length*rh+8;svg.attr('viewBox',`0 0 ${W} ${H}`);
+ const x=d3.scaleLinear([0.75,1.25],[lw,W-34]);svg.append('line').attr('x1',x(1)).attr('x2',x(1)).attr('y1',0).attr('y2',H).attr('stroke','var(--cds-chart-reference)');
+ const SL=T('sectors');
+ rows.forEach((r,i)=>{const y=i*rh+4;const v=Math.max(0.75,Math.min(1.25,r.idx));const c=r.idx>=1.03?'#1e9e5a':r.idx<=0.97?'#d64545':'#9aa5b1';const lab=SL[r.sector]||r.label;
+  svg.append('text').attr('x',0).attr('y',y+13).attr('font-size',11).attr('fill','var(--color-fg)').text(lab);
+  svg.append('rect').attr('x',Math.min(x(1),x(v))).attr('y',y+3).attr('width',Math.max(1,Math.abs(x(v)-x(1)))).attr('height',13).attr('rx',3).attr('fill',c)
+   .on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('now')} (${r.hour}:00): ${pc(r.t_now)}`,`${T('end22')}: ${pc(r.turnout22)}`,`${T('est')}: ${pc(r.est)} (${pp(r.lo)}–${pc(r.hi)})`,T('rep')(fk(r.stations),fk(r.stations_total))])).on('mouseleave',()=>tip.style('opacity',0));
+  svg.append('text').attr('x',r.idx>=1?x(v)+4:x(v)-4).attr('text-anchor',r.idx>=1?'start':'end').attr('y',y+13).attr('font-size',10.5).attr('font-weight',600).attr('fill',c).text(ix(r.idx));});}
+
+let socEl=25;
+const FAM=['likud','shas','utj','rz','yb','center','left','arab','other'];
+const FAMC={likud:'#0038b8',shas:'#111111',utj:'#4a4a4a',rz:'#c48a1d',yb:'#6a4fb3',center:'#4bb3e6',left:'#e0457b',arab:'#2e9e5b',other:'#c8ced6'};
+function drawSoc(){const svg=d3.select('#soc');svg.selectAll('*').remove();const SO=dash.data('society'),SD=dash.data('sectors');const leg=document.getElementById('famLeg');leg.replaceChildren();if(SO.status!=='ok')return;
+ const card=document.getElementById('socCard'),tip=d3.select('#tip5');const W=Math.max(300,card.clientWidth-48);const SL=T('sectors'),FL=T('fam');
+ const cur=SO.data.filter(r=>Number(r.election)===socEl);const ref=SO.data.filter(r=>Number(r.election)===25);const now=SD.status==='ok'?SD.data:[];
+ const order=[...ref].sort((a,b)=>b.eligible-a.eligible).map(r=>r.sector);
+ const lw=Math.min(150,W*0.3),sw=Math.min(70,W*0.13),tw=Math.min(110,W*0.2),gap=10;const bx=lw+sw+gap,bw=W-bx-tw-gap*2,tx=W-tw;const rh=26,top=18,H=top+order.length*rh;
+ svg.attr('viewBox',`0 0 ${W} ${H}`);const maxE=d3.max(ref,r=>r.eligible);
+ [[lw,T('size')],[bx,T('share')],[tx,T('turnoutHist')]].forEach(([x0,t])=>svg.append('text').attr('x',x0).attr('y',10).attr('font-size',10).attr('fill','var(--color-fg-muted)').text(t));
+ const ty=d3.scaleLinear([40,90],[rh-6,4]);const tX=d3.scaleLinear([21,26],[tx,W-4]);
+ order.forEach((sid,i)=>{const y=top+i*rh;const r=cur.find(c=>c.sector===sid),r25=ref.find(c=>c.sector===sid);if(!r)return;const lab=SL[sid]||sid;
+  svg.append('text').attr('x',0).attr('y',y+15).attr('font-size',11).attr('fill','var(--color-fg)').text(lab);
+  svg.append('rect').attr('x',lw).attr('y',y+6).attr('width',Math.max(1,sw*r25.eligible/maxE)).attr('height',11).attr('rx',3).attr('fill','#0038b8').attr('fill-opacity',.35)
+   .on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('size')} 2022: ${fk(r25.eligible)}`])).on('mouseleave',()=>tip.style('opacity',0));
+  let acc=0;FAM.forEach(f=>{const v=Number(r[f]||0);if(v<=0)return;const x0=bx+bw*acc/100;acc+=v;svg.append('rect').attr('x',x0).attr('y',y+4).attr('width',Math.max(0.5,bw*v/100)).attr('height',15).attr('fill',FAMC[f])
+   .on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${FL[f]}: ${pc(v)}`])).on('mouseleave',()=>tip.style('opacity',0));});
+  const hs=SO.data.filter(c=>c.sector===sid).map(c=>({e:Number(c.election),v:Number(c.turnout)})).sort((a,b)=>a.e-b.e);
+  const g=svg.append('g').attr('transform',`translate(0,${y})`);g.append('path').attr('d',d3.line().x(d=>tX(d.e)).y(d=>ty(d.v))(hs)).attr('fill','none').attr('stroke','#9aa5b1').attr('stroke-width',1.5);
+  hs.forEach(d=>g.append('circle').attr('cx',tX(d.e)).attr('cy',ty(d.v)).attr('r',2).attr('fill','#9aa5b1').on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('turnoutHist')} ${({21:'04/2019',22:'09/2019',23:'2020',24:'2021',25:'2022'})[d.e]}: ${pc(d.v)}`])).on('mouseleave',()=>tip.style('opacity',0)));
+  const n=now.find(c=>c.sector===sid);if(n&&n.est!=null){g.append('line').attr('x1',tX(26)).attr('x2',tX(26)).attr('y1',ty(Math.min(90,n.hi))).attr('y2',ty(Math.max(40,n.lo))).attr('stroke','#0038b8').attr('stroke-width',4).attr('stroke-opacity',.25).attr('stroke-linecap','round');
+   g.append('circle').attr('cx',tX(26)).attr('cy',ty(Math.max(40,Math.min(90,n.est)))).attr('r',3).attr('fill','#0038b8').on('mousemove',ev=>tipAt(tip,card,ev,[lab,`${T('p26')}: ${pc(n.est)} (${pp(n.lo)}–${pc(n.hi)})`,`${T('end22')}: ${pc(r25.turnout)}`])).on('mouseleave',()=>tip.style('opacity',0));}});
+ FAM.forEach(f=>{const sp=document.createElement('span');const i=document.createElement('i');i.style.background=FAMC[f];i.style.borderRadius='2px';sp.appendChild(i);sp.appendChild(document.createTextNode(FL[f]));leg.appendChild(sp);});}
+document.querySelectorAll('#elSeg button').forEach(b=>b.addEventListener('click',()=>{socEl=Number(b.dataset.el);document.querySelectorAll('#elSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawSoc();}));
+
+function drawPerf(SE){const svg=d3.select('#perf');svg.selectAll('*').remove();if(SE.status!=='ok')return;const card=document.getElementById('perfCard'),tip=d3.select('#tip6');
+ const col='seats_'+scen;const rows=[...SE.data].sort((a,b)=>b.idx-a.idx||b.seats_poll-a.seats_poll);const W=Math.max(300,card.clientWidth-48),rh=22,lw=Math.min(190,W*0.38),dw=44,H=rows.length*rh+22;
+ svg.attr('viewBox',`0 0 ${W} ${H}`);const lo=Math.min(0.85,d3.min(rows,r=>r.idx)-0.02),hi=Math.max(1.15,d3.max(rows,r=>r.idx)+0.02);const x=d3.scaleLinear([lo,hi],[lw,W-dw-8]);
+ [lo,1,hi].forEach(v=>svg.append('text').attr('x',x(v)).attr('y',H-4).attr('text-anchor','middle').attr('font-size',9.5).attr('fill','var(--color-fg-muted)').text(ix(Math.round(v*100)/100)));
+ svg.append('line').attr('x1',x(1)).attr('x2',x(1)).attr('y1',0).attr('y2',H-14).attr('stroke','var(--cds-chart-reference)');
+ rows.forEach((r,i)=>{const y=i*rh+2;const c=pcol(r.party);const dv=r[col]-r.seats_poll;
+  svg.append('text').attr('x',0).attr('y',y+14).attr('font-size',11).attr('fill','var(--color-fg)').text(PN(r.party));
+  svg.append('rect').attr('x',Math.min(x(1),x(r.idx))).attr('y',y+4).attr('width',Math.max(1.5,Math.abs(x(r.idx)-x(1)))).attr('height',13).attr('rx',3).attr('fill',c).attr('fill-opacity',r[col]>0?1:.45)
+   .on('mousemove',ev=>tipAt(tip,card,ev,[PN(r.party),`${T('mobIdx')}: ${ix(r.idx)}`,`${T('s_poll')}: ${r.seats_poll} · ${T('s_'+scen)}: ${r[col]}`,`${pc(r.share_poll)} → ${pc(r['share_'+scen])}`])).on('mouseleave',()=>tip.style('opacity',0));
+  const t=svg.append('text').attr('x',W-4).attr('y',y+14).attr('text-anchor','end').attr('font-size',11).attr('font-weight',600).attr('fill',dv>0?'#1e9e5a':dv<0?'#d64545':'var(--color-fg-muted)').text(scen==='poll'?String(r.seats_poll):(dv===0?'±0':(dv>0?'+':'')+dv));});}
+function drawGauges(C){document.querySelectorAll('.il-gauge').forEach(g=>{const big=g.nextElementSibling;const k=big.getAttribute('data-where').split('=')[1];const sv=d3.select(g);sv.selectAll('*').remove();
+ if(C.status!=='ok')return;const r=C.data.find(c=>c.camp===k);if(!r||r.idx==null)return;const x=d3.scaleLinear([0.8,1.2],[0,100]).clamp(true);
+ sv.append('rect').attr('x',0).attr('y',3).attr('width',100).attr('height',4).attr('rx',2).attr('fill','color-mix(in srgb,#0038b8 10%,transparent)');
+ sv.append('rect').attr('x',Math.min(50,x(r.idx))).attr('y',2).attr('width',Math.max(1,Math.abs(x(r.idx)-50))).attr('height',6).attr('rx',2).attr('fill',r.idx>=1.03?'#1e9e5a':r.idx<=0.97?'#d64545':'#9aa5b1');
+ sv.append('line').attr('x1',50).attr('x2',50).attr('y1',0).attr('y2',10).attr('stroke','var(--color-fg-muted)').attr('stroke-width',1).attr('vector-effect','non-scaling-stroke');});}
+
+function drawTable(){const M=dash.data('mob');const tb=document.querySelector('#tbl tbody');tb.replaceChildren();if(M.status!=='ok')return;
+ const q=(document.getElementById('q').value||'').trim().toLowerCase(),small=document.getElementById('small').checked;
+ const rows=M.data.filter(r=>(small||r.eligible>=20000)&&(!q||(r.name||'').toLowerCase().includes(q)||(r.name_he||'').includes(q)))
+  .sort((a,b)=>{const x=sortKey==='name'?nm(a):a[sortKey],y=sortKey==='name'?nm(b):b[sortKey];if(x==null)return 1;if(y==null)return -1;return typeof x==='string'?sortDir*x.localeCompare(y):sortDir*(x-y);});
+ rows.forEach(r=>{const tr=document.createElement('tr');tr.setAttribute('data-key',String(r.code));
+  [nm(r),null,fk(r.eligible),pc(r.t10),pc(r.t_now),pc(r.turnout22),pc(r.nbloc22),pc(r.cbloc22),ix(r.idx)].forEach((v,i)=>{const td=document.createElement('td');
+   if(i===1){const s=document.createElement('span');s.className='il-pill';s.style.background=CAMPC[r.camp]||'#999';s.textContent=CN(r.camp);td.appendChild(s);}else td.textContent=v;
+   if(i===8&&r.idx!=null)td.className=r.idx>=1.03?'il-up':r.idx<=0.97?'il-down':'';tr.appendChild(td);});tb.appendChild(tr);});}
+document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{const f=th.getAttribute('data-field');sortDir=sortKey===f?-sortDir:(f==='name'||f==='camp_label'?1:-1);sortKey=f;
+ document.querySelectorAll('#tbl th').forEach(h=>h.removeAttribute('aria-sort'));th.setAttribute('aria-sort',sortDir>0?'ascending':'descending');drawTable();}));
+document.getElementById('q').addEventListener('input',drawTable);document.getElementById('small').addEventListener('change',drawTable);
+document.querySelectorAll('#scen button').forEach(b=>b.addEventListener('click',()=>{scen=b.dataset.s;document.querySelectorAll('#scen button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawSeats(dash.data('seats'));drawPerf(dash.data('seats'));drawCoal(dash.data('coal'));}));
+
+function drawSeats(SE){const svg=d3.select('#hemi');svg.selectAll('*').remove();const pl=document.getElementById('plist');pl.replaceChildren();if(SE.status!=='ok')return;
+ const col='seats_'+scen,sh='share_'+scen;const order=['Arabisch','Wechsel','Offen','Netanjahu'];
+ const parties=[...SE.data].filter(p=>p[col]>0).sort((a,b)=>order.indexOf(a.bloc)-order.indexOf(b.bloc)||b[col]-a[col]);
+ const rowsN=6,R0=62,R1=150,cx=160,cy=160;const radii=d3.range(rowsN).map(i=>R0+(R1-R0)*i/(rowsN-1));const tot=radii.reduce((a,b)=>a+b,0);const pos=[];let left=120;
+ radii.forEach((r,i)=>{const n=i===rowsN-1?left:Math.round(120*r/tot);left-=n;for(let k=0;k<n;k++){const a=Math.PI-(Math.PI*(k+.5)/n);pos.push({a,x:cx+r*Math.cos(a),y:cy-r*Math.sin(a)});}});
+ pos.sort((p,q)=>q.a-p.a);let i=0;const card=document.getElementById('hemiCard'),tip=d3.select('#tip3');
+ parties.forEach(p=>{for(let k=0;k<p[col];k++){const q=pos[i++];if(!q)continue;svg.append('circle').attr('cx',q.x).attr('cy',q.y).attr('r',4.6).attr('fill',pcol(p.party))
+  .on('mousemove',ev=>tipAt(tip,card,ev,[PN(p.party),`${p[col]} ${T('seats')} · ${pc(p[sh])}`,`${T('mobIdx')} ${ix(p.idx)}`])).on('mouseleave',()=>tip.style('opacity',0));}});
+ svg.append('line').attr('x1',cx).attr('x2',cx).attr('y1',cy-R1-8).attr('y2',cy-R0+8).attr('stroke','var(--color-fg-muted)').attr('stroke-dasharray','2 2');
+ svg.append('text').attr('x',cx).attr('y',cy+4).attr('text-anchor','middle').attr('font-size',12).attr('fill','#0038b8').text(T('seatsCenter'));
+ [...SE.data].sort((a,b)=>b[col]-a[col]||b[sh]-a[sh]).forEach(p=>{const i=document.createElement('i');i.style.background=pcol(p.party);const n=document.createElement('span');n.textContent=PN(p.party);
+  const s=document.createElement('span');s.textContent=p[col]>0?p[col]:pc(p[sh]);s.style.fontWeight=p[col]>0?'600':'400';const d=document.createElement('span');const dv=p[col]-p.seats_poll;
+  d.textContent=scen==='poll'?'':(dv===0?'±0':(dv>0?'+':'')+dv);d.className=dv>0?'il-up':dv<0?'il-down':'il-sub';pl.append(i,n,s,d);});}
+
+function drawCoal(CO){const svg=d3.select('#coal');svg.selectAll('*').remove();if(CO.status!=='ok')return;
+ const W=Math.max(260,document.getElementById('coalCard').clientWidth-48);const bh=16,gap=28;const H=CO.data.length*(bh+gap)+12;svg.attr('viewBox',`0 0 ${W} ${H}`);
+ const x=d3.scaleLinear([0,90],[0,W-40]);const CL=T('coal');const rtl=lang==='he';
+ CO.data.forEach((r,i)=>{const y=i*(bh+gap)+20;const v=r[scen];const ok=v>=61;
+  svg.append('text').attr('x',rtl?W:0).attr('text-anchor',rtl?'end':'start').attr('y',y-5).attr('font-size',11).attr('fill','var(--color-fg)').text(CL[r.name]||r.name);
+  svg.append('rect').attr('x',0).attr('y',y).attr('width',x(90)).attr('height',bh).attr('rx',4).attr('fill','color-mix(in srgb,#0038b8 8%,transparent)');
+  svg.append('rect').attr('x',0).attr('y',y).attr('width',x(Math.min(v,90))).attr('height',bh).attr('rx',4).attr('fill',ok?'#0038b8':'color-mix(in srgb,#0038b8 40%,transparent)');
+  svg.append('text').attr('x',x(Math.min(v,90))+4).attr('y',y+12).attr('font-size',11).attr('font-weight',600).attr('fill',ok?'#0038b8':'var(--color-fg-muted)').text(v+(ok?' ✓':''));});
+ svg.append('line').attr('x1',x(61)).attr('x2',x(61)).attr('y1',4).attr('y2',H).attr('stroke','#d64545').attr('stroke-dasharray','3 3');
+ svg.append('text').attr('x',x(61)+3).attr('y',10).attr('font-size',10).attr('fill','#d64545').text('61');}
+})();
+</script>
+
+<div class="il-foot">
+Daten: Zentrale Wahlkommission Israel (<a href="https://mapvotes.bechirot.gov.il/">mapvotes.bechirot.gov.il</a>, Ergebnisse 2022: media25.bechirot.gov.il) ·
+Sektoren und Prognosemethode: <a href="https://votes26.com/?v=sectors">votes26.com</a> · Umfragen: Kan, Kanal 12, Kanal 13 (23.10.2026) ·
+Karte: Natural Earth. Sitzverteilung = einfaches Modell, keine Prognose. Zuletzt aktualisiert: <span id="updAt">–</span>
+</div>
+</div>
+</body>
+</html>
